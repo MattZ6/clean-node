@@ -7,7 +7,7 @@ import {
 
 import { MissingParamError, InvalidParamError } from '../errors';
 
-import { badRequest, serverError } from '../helpers/http-helpers';
+import { badRequest, serverError } from '../helpers/http';
 
 export default class SignUpController implements IController {
   constructor(private readonly emailValidator: IEmailValidator) {}
