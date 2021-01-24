@@ -40,10 +40,7 @@
         "argsIgnorePattern": "_"
       }
     ],
-    // "no-shadow": "off",
-    // "@typescript-eslint/no-shadow": [
-    //   "error"
-    // ],
+    "no-restricted-syntax": "off",
     "camelcase": "off",
     "import/extensions": [
       "error",
