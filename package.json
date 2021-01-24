@@ -11,5 +11,8 @@
   "homepage": "https://github.com/mattz6/clean-node",
   "bugs": "https://github.com/mattz6/clean-node/issues",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "git-commit-msg-linter": "^3.0.0"
+  }
 }
