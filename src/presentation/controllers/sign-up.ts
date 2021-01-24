@@ -1,19 +1,21 @@
 import { IHttpRequest, IHttpRespose } from '../protocols/http';
 
+import MissingParamError from '../errors/MissingParamError';
+
 export default class SignUpController {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public handle(httpRequest: IHttpRequest): IHttpRespose {
     if (!httpRequest.body.name) {
       return {
         statusCode: 400,
-        body: new Error('Missing param: name'),
+        body: new MissingParamError('name'),
       };
     }
 
     if (!httpRequest.body.email) {
       return {
         statusCode: 400,
-        body: new Error('Missing param: email'),
+        body: new MissingParamError('email'),
       };
     }
 
