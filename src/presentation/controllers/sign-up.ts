@@ -1,7 +1,8 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import { IHttpRequest, IHttpRespose } from '../protocols/http';
+
 export default class SignUpController {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public handle(httpRequest: any): any {
+  public handle(httpRequest: IHttpRequest): IHttpRespose {
     if (!httpRequest.body.name) {
       return {
         statusCode: 400,
@@ -16,6 +17,9 @@ export default class SignUpController {
       };
     }
 
-    return null;
+    return {
+      statusCode: 200,
+      body: null,
+    };
   }
 }

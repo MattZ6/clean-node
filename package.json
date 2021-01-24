@@ -14,7 +14,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest --passWithNoTests",
-    "test:staged": "test"
+    "test:staged": "jest --passWithNoTests"
   },
   "devDependencies": {
     "@types/jest": "^26.0.20",
