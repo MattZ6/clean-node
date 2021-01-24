@@ -3,7 +3,9 @@ import { IHttpRequest, IHttpRespose } from '../protocols/http';
 import MissingParamError from '../errors/MissingParamError';
 import badRequest from '../helpers/http-helpers';
 
-export default class SignUpController {
+import IController from '../protocols/controller';
+
+export default class SignUpController implements IController {
   public handle(httpRequest: IHttpRequest): IHttpRespose {
     const requiredFields = [
       'name',
