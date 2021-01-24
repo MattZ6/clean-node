@@ -1,11 +1,13 @@
 import SignUpController from './sign-up';
 import MissingParamError from '../errors/MissingParamError';
 
+const makeSUT = (): SignUpController => new SignUpController();
+
 let systemUnderTest: SignUpController;
 
 describe('SignUpController', () => {
   beforeEach(() => {
-    systemUnderTest = new SignUpController();
+    systemUnderTest = makeSUT();
   });
 
   it('should return 400 if no name is provided', () => {
