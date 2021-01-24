@@ -1,4 +1,4 @@
-import { IHttpRespose } from '../protocols/http';
+import { IHttpRespose } from '../protocols';
 
 import { ServerError } from '../errors';
 

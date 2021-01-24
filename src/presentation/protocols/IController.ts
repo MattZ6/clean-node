@@ -1,4 +1,4 @@
-import { IHttpRequest, IHttpRespose } from './http';
+import { IHttpRequest, IHttpRespose } from '.';
 
 export default interface IController {
   handle(request: IHttpRequest): IHttpRespose;

@@ -1,6 +1,6 @@
 import SignUpController from './SignUpController';
 
-import IEmailValidator from '../protocols/IEmailValidator';
+import { IEmailValidator } from '../protocols';
 import { MissingParamError, InvalidParamError, ServerError } from '../errors';
 
 class EmailValidatorStub implements IEmailValidator {
