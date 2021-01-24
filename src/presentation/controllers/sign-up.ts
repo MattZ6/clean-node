@@ -4,6 +4,7 @@ export default class SignUpController {
   public handle(_: any): any {
     return {
       statusCode: 400,
+      body: new Error('Missing param: name'),
     };
   }
 }
