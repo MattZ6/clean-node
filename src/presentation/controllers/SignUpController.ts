@@ -3,8 +3,7 @@ import { IHttpRequest, IHttpRespose } from '../protocols/http';
 import IController from '../protocols/IController';
 import IEmailValidator from '../protocols/IEmailValidator';
 
-import InvalidParamError from '../errors/InvalidParamError';
-import MissingParamError from '../errors/MissingParamError';
+import { MissingParamError, InvalidParamError } from '../errors';
 
 import { badRequest, serverError } from '../helpers/http-helpers';
 

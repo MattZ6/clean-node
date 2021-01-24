@@ -1,9 +1,7 @@
 import SignUpController from './SignUpController';
 
-import MissingParamError from '../errors/MissingParamError';
-import InvalidParamError from '../errors/InvalidParamError';
 import IEmailValidator from '../protocols/IEmailValidator';
-import ServerError from '../errors/ServerError';
+import { MissingParamError, InvalidParamError, ServerError } from '../errors';
 
 class EmailValidatorStub implements IEmailValidator {
   isValid(_: string): boolean {
