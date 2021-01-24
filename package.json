@@ -1,0 +1,15 @@
+{
+  "name": "clean-node",
+  "description": "Node.js training using Clean Architecture, TDD, DDD and SOLID concepts.",
+  "version": "1.0.0",
+  "private": true,
+  "author": {
+    "name": "Matheus Felipe Zanin",
+    "email": "matt_z6@hotmail.com",
+    "url": "https://github.com/mattz6"
+  },
+  "homepage": "https://github.com/mattz6/clean-node",
+  "bugs": "https://github.com/mattz6/clean-node/issues",
+  "main": "index.js",
+  "license": "MIT"
+}
