@@ -6,8 +6,7 @@ import IEmailValidator from '../protocols/IEmailValidator';
 import InvalidParamError from '../errors/InvalidParamError';
 import MissingParamError from '../errors/MissingParamError';
 
-import badRequest from '../helpers/http-helpers';
-import ServerError from '../errors/ServerError';
+import { badRequest, serverError } from '../helpers/http-helpers';
 
 export default class SignUpController implements IController {
   constructor(private readonly emailValidator: IEmailValidator) {}
@@ -38,10 +37,7 @@ export default class SignUpController implements IController {
         body: null,
       };
     } catch (error) {
-      return {
-        statusCode: 500,
-        body: new ServerError(),
-      };
+      return serverError();
     }
   }
 }
