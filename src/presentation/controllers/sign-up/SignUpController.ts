@@ -8,7 +8,7 @@ import {
 
 import { MissingParamError, InvalidParamError } from '../../errors';
 
-import { badRequest, serverError } from '../../helpers/http';
+import { ok, badRequest, serverError } from '../../helpers/http';
 
 export default class SignUpController implements IController {
   constructor(
@@ -49,10 +49,7 @@ export default class SignUpController implements IController {
         password,
       });
 
-      return {
-        statusCode: 200,
-        body: account,
-      };
+      return ok(account);
     } catch (error) {
       return serverError();
     }
