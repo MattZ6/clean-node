@@ -209,7 +209,7 @@ describe('SignUpController', () => {
 
   it('should return 500 if CreateAccount throws', async () => {
     jest.spyOn(createAccountStub, 'execute').mockImplementationOnce(() => {
-      throw new Error('any_error');
+      return new Promise((_, reject) => reject(Error('any_error')));
     });
 
     const httpRequest = {
