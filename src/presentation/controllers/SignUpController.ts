@@ -5,12 +5,17 @@ import {
   IEmailValidator,
 } from '../protocols';
 
+import { ICreateAccount } from '../../domain/usecases/ICreateAccount';
+
 import { MissingParamError, InvalidParamError } from '../errors';
 
 import { badRequest, serverError } from '../helpers/http';
 
 export default class SignUpController implements IController {
-  constructor(private readonly emailValidator: IEmailValidator) {}
+  constructor(
+    private readonly emailValidator: IEmailValidator,
+    private readonly createAccountUseCase: ICreateAccount
+  ) {}
 
   public handle(httpRequest: IHttpRequest): IHttpRespose {
     try {
@@ -27,7 +32,7 @@ export default class SignUpController implements IController {
         }
       }
 
-      const { email, password, passwordConfirmation } = httpRequest.body;
+      const { name, email, password, passwordConfirmation } = httpRequest.body;
 
       if (password !== passwordConfirmation) {
         return badRequest(new InvalidParamError('passwordConfirmation'));
@@ -39,9 +44,15 @@ export default class SignUpController implements IController {
         return badRequest(new InvalidParamError('email'));
       }
 
+      const account = this.createAccountUseCase.execute({
+        name,
+        email,
+        password,
+      });
+
       return {
         statusCode: 200,
-        body: null,
+        body: account,
       };
     } catch (error) {
       return serverError();
