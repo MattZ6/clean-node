@@ -7,5 +7,5 @@ export interface ICreateAccountDTO {
 }
 
 export interface ICreateAccount {
-  execute(data: ICreateAccountDTO): IAccountModel;
+  execute(data: ICreateAccountDTO): Promise<IAccountModel>;
 }

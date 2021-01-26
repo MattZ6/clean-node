@@ -16,7 +16,7 @@ export default class SignUpController implements IController {
     private readonly createAccountUseCase: ICreateAccount
   ) {}
 
-  public handle(httpRequest: IHttpRequest): IHttpRespose {
+  public async handle(httpRequest: IHttpRequest): Promise<IHttpRespose> {
     try {
       const requiredFields = [
         'name',
@@ -43,7 +43,7 @@ export default class SignUpController implements IController {
         return badRequest(new InvalidParamError('email'));
       }
 
-      const account = this.createAccountUseCase.execute({
+      const account = await this.createAccountUseCase.execute({
         name,
         email,
         password,
