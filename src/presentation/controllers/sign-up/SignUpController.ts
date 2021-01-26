@@ -3,13 +3,12 @@ import {
   IHttpRespose,
   IController,
   IEmailValidator,
-} from '../protocols';
+  ICreateAccount,
+} from './SignUpController.protocols';
 
-import { ICreateAccount } from '../../domain/usecases/ICreateAccount';
+import { MissingParamError, InvalidParamError } from '../../errors';
 
-import { MissingParamError, InvalidParamError } from '../errors';
-
-import { badRequest, serverError } from '../helpers/http';
+import { badRequest, serverError } from '../../helpers/http';
 
 export default class SignUpController implements IController {
   constructor(

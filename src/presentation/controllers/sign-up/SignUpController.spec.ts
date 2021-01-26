@@ -1,17 +1,21 @@
 // eslint-disable-next-line max-classes-per-file
 import SignUpController from './SignUpController';
 
-import { IEmailValidator } from '../protocols';
-import { MissingParamError, InvalidParamError, ServerError } from '../errors';
-
 import {
+  IEmailValidator,
   ICreateAccount,
   ICreateAccountDTO,
-} from '../../domain/usecases/ICreateAccount';
-import IAccountModel from '../../domain/models/IAccount';
+  IAccount,
+} from './SignUpController.protocols';
+
+import {
+  MissingParamError,
+  InvalidParamError,
+  ServerError,
+} from '../../errors';
 
 class CreateAccountStub implements ICreateAccount {
-  public execute({ name, email, password }: ICreateAccountDTO): IAccountModel {
+  public execute({ name, email, password }: ICreateAccountDTO): IAccount {
     return {
       id: 'valid_id',
       name,
