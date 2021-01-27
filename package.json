@@ -15,8 +15,8 @@
   "scripts": {
     "test": "jest --passWithNoTests --runInBand",
     "test:verbose": "yarn test --verbose",
-    "test:unit": "yarn test -c jest-unit.config.js",
-    "test:integration": "yarn test -c jest-integration.config.js",
+    "test:unit": "yarn test -c jest-unit.config.js --watch",
+    "test:integration": "yarn test -c jest-integration.config.js --watch",
     "test:staged": "yarn test --findRelatedTests",
     "test:ci": "yarn test --coverage"
   },
