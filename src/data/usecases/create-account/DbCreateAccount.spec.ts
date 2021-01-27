@@ -1,5 +1,5 @@
 import DbCreateAccount from './DbCreateAccount';
-import IEncrypter from '../../protocols/IEncrypter';
+import { IEncrypter } from './DbCreateAccount.protocols';
 
 class EncrypterStub implements IEncrypter {
   async encrypt(_: string): Promise<string> {
