@@ -18,17 +18,33 @@ describe('DbCreateAccount use case', () => {
     systemUnderTest = new DbCreateAccount(encrypterStub);
   });
 
-  it('should call Encrypter with correct password', () => {
+  it('should call Encrypter with correct password', async () => {
     const encryptSpy = jest.spyOn(encrypterStub, 'encrypt');
 
     const password = 'valid_password';
 
-    systemUnderTest.execute({
+    await systemUnderTest.execute({
       name: 'valid_name',
       email: 'valid_email@mail.com',
       password,
     });
 
     expect(encryptSpy).toHaveBeenCalledWith(password);
+  });
+
+  it('should throw if Encrypter throws', async () => {
+    jest
+      .spyOn(encrypterStub, 'encrypt')
+      .mockReturnValueOnce(new Promise((_, reject) => reject(new Error())));
+
+    const password = 'valid_password';
+
+    const promise = systemUnderTest.execute({
+      name: 'valid_name',
+      email: 'valid_email@mail.com',
+      password,
+    });
+
+    await expect(promise).rejects.toThrow();
   });
 });
