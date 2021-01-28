@@ -18,12 +18,7 @@ export default class MongoAccountRepository
       password,
     });
 
-    const { _id, ...data } = result.ops[0];
-
-    const account = {
-      id: _id,
-      ...data,
-    };
+    const account = mongoHelper.mapTo<IAccount>(result.ops[0]);
 
     return account;
   }
