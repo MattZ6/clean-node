@@ -1,3 +1,4 @@
+import ICreateAccountRepository from '../../protocols/ICreateAccountRepository';
 import {
   IEncrypter,
   ICreateAccount,
@@ -6,12 +7,23 @@ import {
 } from './DbCreateAccount.protocols';
 
 export default class DbCreateAccount implements ICreateAccount {
-  constructor(private readonly encrypter: IEncrypter) {}
+  constructor(
+    private readonly encrypter: IEncrypter,
+    private readonly createAccountRepository: ICreateAccountRepository
+  ) {}
 
   public async execute({
+    name,
+    email,
     password,
   }: ICreateAccountDTO): Promise<IAccountModel> {
-    await this.encrypter.encrypt(password);
+    const passwordHash = await this.encrypter.encrypt(password);
+
+    await this.createAccountRepository.create({
+      name,
+      email,
+      password: passwordHash,
+    });
 
     return new Promise(res => res({} as IAccountModel));
   }
