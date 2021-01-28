@@ -27,6 +27,16 @@ describe('BCryptCriptographyAdapter', () => {
     expect(bcryptHash).toHaveBeenCalledWith('any_value', BCRYPT_SALT);
   });
 
+  it('should throw if BCrypt throws', async () => {
+    jest
+      .spyOn(bcrypt, 'hash')
+      .mockReturnValueOnce(new Promise((_, reject) => reject(new Error())));
+
+    const promise = systemUnderTest.encrypt('any_value');
+
+    await expect(promise).rejects.toThrow();
+  });
+
   it('should return a hash on success', async () => {
     const hashedValue = await systemUnderTest.encrypt('any_value');
 
