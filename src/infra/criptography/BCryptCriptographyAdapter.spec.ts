@@ -4,11 +4,19 @@ import BCryptCriptographyAdapter from './BCryptCriptographyAdapter';
 
 let systemUnderTest: BCryptCriptographyAdapter;
 
-const salt = 12;
+const BCRYPT_SALT = 12;
+
+const HASHED_VALUE = 'hashed_value';
+
+jest.mock('bcrypt', () => ({
+  async hash(): Promise<string> {
+    return new Promise(resolve => resolve(HASHED_VALUE));
+  },
+}));
 
 describe('BCryptCriptographyAdapter', () => {
   beforeEach(() => {
-    systemUnderTest = new BCryptCriptographyAdapter(salt);
+    systemUnderTest = new BCryptCriptographyAdapter(BCRYPT_SALT);
   });
 
   it('should call BCrypt with correct values', async () => {
@@ -16,6 +24,12 @@ describe('BCryptCriptographyAdapter', () => {
 
     await systemUnderTest.encrypt('any_value');
 
-    expect(bcryptHash).toHaveBeenCalledWith('any_value', salt);
+    expect(bcryptHash).toHaveBeenCalledWith('any_value', BCRYPT_SALT);
+  });
+
+  it('should return a hash on success', async () => {
+    const hashedValue = await systemUnderTest.encrypt('any_value');
+
+    expect(hashedValue).toBe(HASHED_VALUE);
   });
 });
