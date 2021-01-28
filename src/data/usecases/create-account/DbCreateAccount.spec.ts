@@ -63,12 +63,10 @@ describe('DbCreateAccount use case', () => {
       .spyOn(encrypterStub, 'encrypt')
       .mockReturnValueOnce(new Promise((_, reject) => reject(new Error())));
 
-    const password = 'valid_password';
-
     const promise = systemUnderTest.execute({
       name: 'valid_name',
       email: 'valid_email@mail.com',
-      password,
+      password: 'valid_password',
     });
 
     await expect(promise).rejects.toThrow();
@@ -91,5 +89,19 @@ describe('DbCreateAccount use case', () => {
       email,
       password: 'hashed_password',
     });
+  });
+
+  it('should throw if CreateAccountRepository throws', async () => {
+    jest
+      .spyOn(createAccountRepositoryStub, 'create')
+      .mockReturnValueOnce(new Promise((_, reject) => reject(new Error())));
+
+    const promise = systemUnderTest.execute({
+      name: 'valid_name',
+      email: 'valid_email@mail.com',
+      password: 'valid_password',
+    });
+
+    await expect(promise).rejects.toThrow();
   });
 });
