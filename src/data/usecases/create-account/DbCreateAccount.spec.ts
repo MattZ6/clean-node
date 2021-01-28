@@ -1,3 +1,7 @@
+/* eslint-disable max-classes-per-file */
+import IAccountModel from '../../../domain/models/IAccount';
+import { ICreateAccountDTO } from '../../../domain/usecases/ICreateAccount';
+import ICreateAccountRepository from '../../protocols/ICreateAccountRepository';
 import DbCreateAccount from './DbCreateAccount';
 import { IEncrypter } from './DbCreateAccount.protocols';
 
@@ -7,15 +11,37 @@ class EncrypterStub implements IEncrypter {
   }
 }
 
+class CreateAccountRepositoryStub implements ICreateAccountRepository {
+  async create({
+    name,
+    email,
+    password,
+  }: ICreateAccountDTO): Promise<IAccountModel> {
+    return new Promise(resolve =>
+      resolve({
+        id: 'any_id',
+        name,
+        email,
+        password,
+      })
+    );
+  }
+}
+
 let encrypterStub: EncrypterStub;
+let createAccountRepositoryStub: CreateAccountRepositoryStub;
 
 let systemUnderTest: DbCreateAccount;
 
 describe('DbCreateAccount use case', () => {
   beforeEach(() => {
     encrypterStub = new EncrypterStub();
+    createAccountRepositoryStub = new CreateAccountRepositoryStub();
 
-    systemUnderTest = new DbCreateAccount(encrypterStub);
+    systemUnderTest = new DbCreateAccount(
+      encrypterStub,
+      createAccountRepositoryStub
+    );
   });
 
   it('should call Encrypter with correct password', async () => {
@@ -46,5 +72,24 @@ describe('DbCreateAccount use case', () => {
     });
 
     await expect(promise).rejects.toThrow();
+  });
+
+  it('should call CreateAccountRepository with correct data', async () => {
+    const createSpy = jest.spyOn(createAccountRepositoryStub, 'create');
+
+    const name = 'valid_name';
+    const email = 'valid_email@mail.com';
+
+    await systemUnderTest.execute({
+      name,
+      email,
+      password: 'valid_password',
+    });
+
+    expect(createSpy).toHaveBeenCalledWith({
+      name,
+      email,
+      password: 'hashed_password',
+    });
   });
 });
