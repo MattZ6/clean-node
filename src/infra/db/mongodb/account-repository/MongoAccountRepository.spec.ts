@@ -6,17 +6,17 @@ let systemUnderTest: MongoAccountRepository;
 
 describe('MongoAccountRepository', () => {
   beforeAll(async () => {
-    await mongoHelper.connect(
-      process.env.MONGO_URL ?? 'mongodb://127.0.0.1:27498/jest?'
-    );
+    await mongoHelper.connect(process.env.MONGO_URL ?? '');
   });
 
   afterAll(async () => {
     await mongoHelper.disconnect();
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     systemUnderTest = new MongoAccountRepository();
+
+    await mongoHelper.getCollection('accounts').deleteMany({});
   });
 
   it('should return an account on success', async () => {
