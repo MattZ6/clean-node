@@ -19,12 +19,12 @@ export default class DbCreateAccount implements ICreateAccount {
   }: ICreateAccountDTO): Promise<IAccountModel> {
     const passwordHash = await this.encrypter.encrypt(password);
 
-    await this.createAccountRepository.create({
+    const account = await this.createAccountRepository.create({
       name,
       email,
       password: passwordHash,
     });
 
-    return new Promise(res => res({} as IAccountModel));
+    return account;
   }
 }
