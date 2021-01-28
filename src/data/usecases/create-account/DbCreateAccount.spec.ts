@@ -104,4 +104,22 @@ describe('DbCreateAccount use case', () => {
 
     await expect(promise).rejects.toThrow();
   });
+
+  it('should return an account on success', async () => {
+    const name = 'valid_name';
+    const email = 'valid_email@mail.com';
+
+    const account = await systemUnderTest.execute({
+      name,
+      email,
+      password: 'valid_password',
+    });
+
+    expect(account).toEqual({
+      id: 'any_id',
+      name,
+      email,
+      password: 'hashed_password',
+    });
+  });
 });
