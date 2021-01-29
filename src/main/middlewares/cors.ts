@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 
 export default function cors(
-  request: Request,
+  _: Request,
   response: Response,
   next: NextFunction
 ): void {
-  response.set('access-control-allow-origin', '*');
-  response.set('access-control-allow-methods', '*');
-  response.set('access-control-allow-headers', '*');
+  response.set('Access-Control-Allow-Origin', '*');
+  response.set('Access-Control-Allow-Methods', '*');
+  response.set('Access-Control-Allow-Headers', '*');
 
   next();
 }

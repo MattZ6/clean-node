@@ -12,8 +12,8 @@ describe('CORS middleware', () => {
 
     await supertest(app)
       .get(ROUTE)
-      .expect('access-control-allow-origin', '*')
-      .expect('access-control-allow-methods', '*')
-      .expect('access-control-allow-headers', '*');
+      .expect('Access-Control-Allow-Origin', '*')
+      .expect('Access-Control-Allow-Methods', '*')
+      .expect('Access-Control-Allow-Headers', '*');
   });
 });
