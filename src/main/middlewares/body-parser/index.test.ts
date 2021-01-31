@@ -2,19 +2,15 @@ import supertest from 'supertest';
 
 import app from '../../config/app';
 
-describe('Body parser middleware', () => {
+describe('Body Parser Middleware', () => {
   it('should parse body as json', async () => {
-    const ROUTE = '/test_body_parser';
-
-    app.post(ROUTE, (request, response) => {
-      response.send(request.body);
+    app.post('/test_body_parser', (req, res) => {
+      res.send(req.body);
     });
 
     await supertest(app)
-      .post(ROUTE)
-      .send({
-        hello: 'world',
-      })
-      .expect({ hello: 'world' });
+      .post('/test_body_parser')
+      .send({ name: 'any_name' })
+      .expect({ name: 'any_name' });
   });
 });

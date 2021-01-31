@@ -1,6 +1,6 @@
 import validator from 'validator';
 
-import EmailValidatorAdapter from './EmailValidatorAdapter';
+import { EmailValidatorAdapter } from './EmailValidatorAdapter';
 
 let systemUnderTest: EmailValidatorAdapter;
 

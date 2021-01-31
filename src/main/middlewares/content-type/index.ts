@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 
-export default function contentType(
+export const contentType = (
   _: Request,
-  response: Response,
+  res: Response,
   next: NextFunction
-): void {
-  response.type('json');
+): void => {
+  res.type('json');
 
   next();
-}
+};

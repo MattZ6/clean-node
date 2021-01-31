@@ -1,5 +1,5 @@
 import { IHttpRequest, IHttpRespose } from '.';
 
-export default interface IController {
+export interface IController {
   handle(request: IHttpRequest): Promise<IHttpRespose>;
 }

@@ -1,5 +1,3 @@
-import bodyParser from './body-parser';
-import contentType from './content-type';
-import cors from './cors';
-
-export { bodyParser, contentType, cors };
+export * from './body-parser';
+export * from './content-type';
+export * from './cors';

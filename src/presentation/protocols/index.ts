@@ -1,5 +1,2 @@
-import IController from './IController';
-
+export * from './IController';
 export * from './Http';
-
-export { IController };

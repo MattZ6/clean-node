@@ -1,9 +1,12 @@
 /* eslint-disable max-classes-per-file */
-import IAccountModel from '../../../domain/models/IAccount';
-import { ICreateAccountDTO } from '../../../domain/usecases/ICreateAccount';
-import ICreateAccountRepository from '../../protocols/ICreateAccountRepository';
-import DbCreateAccount from './DbCreateAccount';
-import { IEncrypter } from './DbCreateAccount.protocols';
+import {
+  IEncrypter,
+  ICreateAccountDTO,
+  ICreateAccountRepository,
+  IAccountModel,
+} from './DbCreateAccount.protocols';
+
+import { DbCreateAccount } from './DbCreateAccount';
 
 class EncrypterStub implements IEncrypter {
   async encrypt(_: string): Promise<string> {

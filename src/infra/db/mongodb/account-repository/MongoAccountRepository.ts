@@ -1,16 +1,17 @@
-import { ICreateAccountDTO } from '../../../../domain/usecases/ICreateAccount';
-import IAccount from '../../../../domain/models/IAccount';
-import ICreateAccountRepository from '../../../../data/protocols/ICreateAccountRepository';
-import mongoHelper from '../helpers/mongo-helper';
+import { ICreateAccountRepository } from '../../../../data/protocols/ICreateAccountRepository';
 
-export default class MongoAccountRepository
-  implements ICreateAccountRepository {
+import { ICreateAccountDTO } from '../../../../domain/usecases/ICreateAccount';
+import { IAccountModel } from '../../../../domain/models/IAccount';
+
+import { mongoHelper } from '../helpers/mongo-helper';
+
+export class MongoAccountRepository implements ICreateAccountRepository {
   async create({
     name,
     email,
     password,
-  }: ICreateAccountDTO): Promise<IAccount> {
-    const accountsCollection = mongoHelper.getCollection('accounts');
+  }: ICreateAccountDTO): Promise<IAccountModel> {
+    const accountsCollection = await mongoHelper.getCollection('accounts');
 
     const result = await accountsCollection.insertOne({
       name,
@@ -18,7 +19,7 @@ export default class MongoAccountRepository
       password,
     });
 
-    const account = mongoHelper.mapTo<IAccount>(result.ops[0]);
+    const account = mongoHelper.mapTo<IAccountModel>(result.ops[0]);
 
     return account;
   }

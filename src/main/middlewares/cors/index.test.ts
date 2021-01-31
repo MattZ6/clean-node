@@ -4,14 +4,12 @@ import app from '../../config/app';
 
 describe('CORS middleware', () => {
   it('should enable CORS', async () => {
-    const ROUTE = '/test_cors';
-
-    app.post(ROUTE, (_, response) => {
-      response.send();
+    app.post('/test_cors', (_, res) => {
+      res.send();
     });
 
     await supertest(app)
-      .get(ROUTE)
+      .get('/test_cors')
       .expect('Access-Control-Allow-Origin', '*')
       .expect('Access-Control-Allow-Methods', '*')
       .expect('Access-Control-Allow-Headers', '*');

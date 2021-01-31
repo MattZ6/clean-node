@@ -1,12 +1,12 @@
-import ICreateAccountRepository from '../../protocols/ICreateAccountRepository';
 import {
   IEncrypter,
   ICreateAccount,
   ICreateAccountDTO,
+  ICreateAccountRepository,
   IAccountModel,
 } from './DbCreateAccount.protocols';
 
-export default class DbCreateAccount implements ICreateAccount {
+export class DbCreateAccount implements ICreateAccount {
   constructor(
     private readonly encrypter: IEncrypter,
     private readonly createAccountRepository: ICreateAccountRepository

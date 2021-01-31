@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 
-import BCryptCriptographyAdapter from './BCryptCriptographyAdapter';
+import { BCryptCriptographyAdapter } from './BCryptCriptographyAdapter';
 
 let systemUnderTest: BCryptCriptographyAdapter;
 

@@ -10,7 +10,7 @@ import { MissingParamError, InvalidParamError } from '../../errors';
 
 import { ok, badRequest, serverError } from '../../helpers/http';
 
-export default class SignUpController implements IController {
+export class SignUpController implements IController {
   constructor(
     private readonly emailValidator: IEmailValidator,
     private readonly createAccountUseCase: ICreateAccount

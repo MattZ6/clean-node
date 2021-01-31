@@ -1,6 +1,6 @@
-import mongoHelper from '../helpers/mongo-helper';
+import { mongoHelper } from '../helpers/mongo-helper';
 
-import MongoAccountRepository from './MongoAccountRepository';
+import { MongoAccountRepository } from './MongoAccountRepository';
 
 let systemUnderTest: MongoAccountRepository;
 
@@ -16,7 +16,9 @@ describe('MongoAccountRepository', () => {
   beforeEach(async () => {
     systemUnderTest = new MongoAccountRepository();
 
-    await mongoHelper.getCollection('accounts').deleteMany({});
+    const accountsCollection = await mongoHelper.getCollection('accounts');
+
+    await accountsCollection.deleteMany({});
   });
 
   it('should return an account on success', async () => {

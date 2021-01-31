@@ -1,8 +1,8 @@
 import supertest from 'supertest';
 
-import mongoHelper from '../../../infra/db/mongodb/helpers/mongo-helper';
+import app from '../config/app';
 
-import app from '../../config/app';
+import { mongoHelper } from '../../infra/db/mongodb/helpers/mongo-helper';
 
 describe('SignUp routes', () => {
   beforeAll(async () => {
@@ -14,12 +14,14 @@ describe('SignUp routes', () => {
   });
 
   beforeEach(async () => {
-    await mongoHelper.getCollection('accounts').deleteMany({});
+    const accountsCollection = await mongoHelper.getCollection('accounts');
+
+    await accountsCollection.deleteMany({});
   });
 
   it('should return an account on success', async () => {
     await supertest(app)
-      .post('/v1/sign_up')
+      .post('/api/v1/sign_up')
       .send({
         name: 'Usuário',
         email: 'usuario.teste@gmail.com',

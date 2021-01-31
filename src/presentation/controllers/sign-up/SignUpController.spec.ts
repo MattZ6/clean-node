@@ -1,11 +1,11 @@
 // eslint-disable-next-line max-classes-per-file
-import SignUpController from './SignUpController';
+import { SignUpController } from './SignUpController';
 
 import {
   IEmailValidator,
   ICreateAccount,
   ICreateAccountDTO,
-  IAccount,
+  IAccountModel,
 } from './SignUpController.protocols';
 
 import {
@@ -19,7 +19,7 @@ class CreateAccountStub implements ICreateAccount {
     name,
     email,
     password,
-  }: ICreateAccountDTO): Promise<IAccount> {
+  }: ICreateAccountDTO): Promise<IAccountModel> {
     return {
       id: 'valid_id',
       name,

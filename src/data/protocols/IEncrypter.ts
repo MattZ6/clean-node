@@ -1,3 +1,3 @@
-export default interface IEncrypter {
+export interface IEncrypter {
   encrypt(value: string): Promise<string>;
 }

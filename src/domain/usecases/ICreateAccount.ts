@@ -1,4 +1,4 @@
-import IAccountModel from '../models/IAccount';
+import { IAccountModel } from '../models/IAccount';
 
 export interface ICreateAccountDTO {
   name: string;

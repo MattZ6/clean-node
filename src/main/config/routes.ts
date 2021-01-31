@@ -4,9 +4,9 @@ import { sync } from 'fast-glob';
 export default (app: Express): void => {
   const router = Router();
 
-  app.use(router);
+  app.use('/api', router);
 
-  sync('**/src/main/routes/**/*.routes.ts').map(async filePath =>
+  sync('**/src/main/routes/*.routes.ts').forEach(async filePath =>
     (await import(`../../../${filePath}`)).default(router)
   );
 };
