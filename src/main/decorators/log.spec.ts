@@ -1,4 +1,6 @@
-import { ok } from '../../presentation/helpers/http';
+/* eslint-disable max-classes-per-file */
+import { ILogErrorRepository } from '../../data/protocols/ILogErrorRepository';
+import { ok, serverError } from '../../presentation/helpers/http';
 import {
   IController,
   IHttpRequest,
@@ -13,14 +15,26 @@ class ControllerStub implements IController {
   }
 }
 
+class LogErrorRepositoryStub implements ILogErrorRepository {
+  async log(_: string): Promise<void> {
+    return new Promise(res => res());
+  }
+}
+
 let controllerStub: ControllerStub;
+let logErrorRepositoryStub: LogErrorRepositoryStub;
+
 let systemUnderTest: LogControllerDecorator;
 
 describe('LogControllerDecorator', () => {
   beforeEach(() => {
     controllerStub = new ControllerStub();
+    logErrorRepositoryStub = new LogErrorRepositoryStub();
 
-    systemUnderTest = new LogControllerDecorator(controllerStub);
+    systemUnderTest = new LogControllerDecorator(
+      controllerStub,
+      logErrorRepositoryStub
+    );
   });
 
   it('should call controller handle method', async () => {
@@ -51,5 +65,30 @@ describe('LogControllerDecorator', () => {
     });
 
     expect(response).toEqual(ok());
+  });
+
+  it('should call LogErrorRepository with correct error if controller returns a server errror (500)', async () => {
+    const logSpy = jest.spyOn(logErrorRepositoryStub, 'log');
+
+    const error: Error = {
+      name: 'Error',
+      message: 'any_error',
+      stack: 'the stack trace',
+    };
+
+    jest
+      .spyOn(controllerStub, 'handle')
+      .mockReturnValueOnce(new Promise(res => res(serverError(error))));
+
+    await systemUnderTest.handle({
+      body: {
+        name: 'any_name',
+        email: 'any_email@email.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password',
+      },
+    });
+
+    expect(logSpy).toHaveBeenLastCalledWith(error.stack);
   });
 });
