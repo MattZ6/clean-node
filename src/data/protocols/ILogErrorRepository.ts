@@ -1,3 +1,3 @@
 export interface ILogErrorRepository {
-  log(stackTrace?: string): Promise<void>;
+  saveError(stackTrace?: string): Promise<void>;
 }
