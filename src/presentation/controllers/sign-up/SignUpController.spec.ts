@@ -14,6 +14,10 @@ import {
   ServerError,
 } from '../../errors';
 
+import { IHttpRequest } from '../../protocols';
+
+import { badRequest, ok, serverError } from '../../helpers/http';
+
 class CreateAccountStub implements ICreateAccount {
   public async execute({
     name,
@@ -52,107 +56,89 @@ describe('SignUpController', () => {
   });
 
   it('should return 400 if no name is provided', async () => {
-    const httpRequest = {
+    const httpResponse = await systemUnderTest.handle({
       body: {
         email: 'any_email@mail.com',
         password: 'any_password',
         passwordConfirmation: 'any_password',
       },
-    };
+    });
 
-    const httpResponse = await systemUnderTest.handle(httpRequest);
-
-    expect(httpResponse.statusCode).toBe(400);
-    expect(httpResponse.body).toEqual(new MissingParamError('name'));
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('name')));
   });
 
   it('should return 400 if no email is provided', async () => {
-    const httpRequest = {
+    const httpResponse = await systemUnderTest.handle({
       body: {
         name: 'any_name',
         password: 'any_password',
         passwordConfirmation: 'any_password',
       },
-    };
+    });
 
-    const httpResponse = await systemUnderTest.handle(httpRequest);
-
-    expect(httpResponse.statusCode).toBe(400);
-    expect(httpResponse.body).toEqual(new MissingParamError('email'));
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('email')));
   });
 
   it('should return 400 if no password is provided', async () => {
-    const httpRequest = {
+    const httpResponse = await systemUnderTest.handle({
       body: {
         name: 'any_name',
         email: 'any_email@mail.com',
         passwordConfirmation: 'any_password',
       },
-    };
+    });
 
-    const httpResponse = await systemUnderTest.handle(httpRequest);
-
-    expect(httpResponse.statusCode).toBe(400);
-    expect(httpResponse.body).toEqual(new MissingParamError('password'));
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('password')));
   });
 
   it('should return 400 if no password confirmation is provided', async () => {
-    const httpRequest = {
+    const httpResponse = await systemUnderTest.handle({
       body: {
         name: 'any_name',
         email: 'any_email@mail.com',
         password: 'any_password',
       },
-    };
+    });
 
-    const httpResponse = await systemUnderTest.handle(httpRequest);
-
-    expect(httpResponse.statusCode).toBe(400);
-    expect(httpResponse.body).toEqual(
-      new MissingParamError('passwordConfirmation')
+    expect(httpResponse).toEqual(
+      badRequest(new MissingParamError('passwordConfirmation'))
     );
   });
 
   it('should return 400 if password confirmation fails', async () => {
-    const httpRequest = {
+    const httpResponse = await systemUnderTest.handle({
       body: {
         name: 'any_name',
         email: 'any_email@mail.com',
         password: 'any_password',
         passwordConfirmation: 'another_password',
       },
-    };
+    });
 
-    const httpResponse = await systemUnderTest.handle(httpRequest);
-
-    expect(httpResponse.statusCode).toBe(400);
-    expect(httpResponse.body).toEqual(
-      new InvalidParamError('passwordConfirmation')
+    expect(httpResponse).toEqual(
+      badRequest(new InvalidParamError('passwordConfirmation'))
     );
   });
 
   it('should return 400 if an invalid email is provided', async () => {
     jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false);
 
-    const httpRequest = {
+    const httpResponse = await systemUnderTest.handle({
       body: {
         name: 'any_name',
         email: 'invalid_email@email.com',
         password: 'any_password',
         passwordConfirmation: 'any_password',
       },
-    };
+    });
 
-    const httpResponse = await systemUnderTest.handle(httpRequest);
-
-    expect(httpResponse.statusCode).toBe(400);
-    expect(httpResponse.body).toEqual(new InvalidParamError('email'));
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')));
   });
 
   it('should call EmailValidator with correct email', async () => {
     const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid');
 
-    const httpRequest = {
+    const httpRequest: IHttpRequest = {
       body: {
         name: 'any_name',
         email: 'any_email@email.com',
@@ -171,19 +157,16 @@ describe('SignUpController', () => {
       throw new Error('any_error');
     });
 
-    const httpRequest = {
+    const httpResponse = await systemUnderTest.handle({
       body: {
         name: 'any_name',
         email: 'invalid_email@email.com',
         password: 'any_password',
         passwordConfirmation: 'any_password',
       },
-    };
+    });
 
-    const httpResponse = await systemUnderTest.handle(httpRequest);
-
-    expect(httpResponse.statusCode).toBe(500);
-    expect(httpResponse.body).toEqual(new ServerError());
+    expect(httpResponse).toEqual(serverError(new ServerError()));
   });
 
   it('should call CreateAccount with correct values', async () => {
@@ -212,19 +195,16 @@ describe('SignUpController', () => {
       return new Promise((_, reject) => reject(Error('any_error')));
     });
 
-    const httpRequest = {
+    const httpResponse = await systemUnderTest.handle({
       body: {
         name: 'any_name',
         email: 'invalid_email@email.com',
         password: 'any_password',
         passwordConfirmation: 'any_password',
       },
-    };
+    });
 
-    const httpResponse = await systemUnderTest.handle(httpRequest);
-
-    expect(httpResponse.statusCode).toBe(500);
-    expect(httpResponse.body).toEqual(new ServerError());
+    expect(httpResponse).toEqual(serverError(new ServerError()));
   });
 
   it('should return 200 valid data is provided', async () => {
@@ -239,12 +219,13 @@ describe('SignUpController', () => {
 
     const httpResponse = await systemUnderTest.handle(httpRequest);
 
-    expect(httpResponse.statusCode).toBe(200);
-    expect(httpResponse.body).toEqual({
-      id: 'valid_id',
-      name: httpRequest.body.name,
-      email: httpRequest.body.email,
-      password: httpRequest.body.password,
-    });
+    expect(httpResponse).toEqual(
+      ok({
+        id: 'valid_id',
+        name: httpRequest.body.name,
+        email: httpRequest.body.email,
+        password: httpRequest.body.password,
+      })
+    );
   });
 });
