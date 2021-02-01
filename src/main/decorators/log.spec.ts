@@ -39,4 +39,17 @@ describe('LogControllerDecorator', () => {
 
     expect(handleSpy).toHaveBeenCalledWith(request);
   });
+
+  it('should return same result of the controller', async () => {
+    const response = await systemUnderTest.handle({
+      body: {
+        name: 'any_name',
+        email: 'any_email@email.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password',
+      },
+    });
+
+    expect(response).toEqual(ok());
+  });
 });

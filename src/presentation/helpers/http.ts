@@ -6,7 +6,7 @@ import { ServerError } from '../errors';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ok = (data?: any): IHttpRespose => ({
   statusCode: 200,
-  body: data,
+  body: data ?? null,
 });
 
 export const badRequest = (error: Error): IHttpRespose => ({
