@@ -16,7 +16,7 @@ class ControllerStub implements IController {
 }
 
 class LogErrorRepositoryStub implements ILogErrorRepository {
-  async log(_: string): Promise<void> {
+  async saveError(_: string): Promise<void> {
     return new Promise(res => res());
   }
 }
@@ -68,7 +68,7 @@ describe('LogControllerDecorator', () => {
   });
 
   it('should call LogErrorRepository with correct error if controller returns a server errror (500)', async () => {
-    const logSpy = jest.spyOn(logErrorRepositoryStub, 'log');
+    const logSpy = jest.spyOn(logErrorRepositoryStub, 'saveError');
 
     const error: Error = {
       name: 'Error',
