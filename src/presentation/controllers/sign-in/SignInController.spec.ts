@@ -1,3 +1,8 @@
+/* eslint-disable max-classes-per-file */
+import {
+  IAuthentication,
+  IAuthenticateRequestDTO,
+} from '../../../domain/usecases/IAuthentication';
 import {
   InvalidParamError,
   MissingParamError,
@@ -13,16 +18,26 @@ class EmailValidatorStub implements IEmailValidator {
     return true;
   }
 }
+class AuthenticationStub implements IAuthentication {
+  async auth(_: IAuthenticateRequestDTO): Promise<string> {
+    return 'any_access_token';
+  }
+}
 
 let emailValidatorStub: EmailValidatorStub;
+let authenticationStub: AuthenticationStub;
 
 let systemUnderTest: SignInController;
 
 describe('SignInController', () => {
   beforeEach(() => {
     emailValidatorStub = new EmailValidatorStub();
+    authenticationStub = new AuthenticationStub();
 
-    systemUnderTest = new SignInController(emailValidatorStub);
+    systemUnderTest = new SignInController(
+      emailValidatorStub,
+      authenticationStub
+    );
   });
 
   it('should return 400 if no email is provided', async () => {
@@ -86,5 +101,23 @@ describe('SignInController', () => {
     });
 
     expect(httpResponse).toEqual(serverError(new ServerError()));
+  });
+
+  it('should call Authentication with correct values', async () => {
+    const authSpy = jest.spyOn(authenticationStub, 'auth');
+
+    const httpRequest = {
+      body: {
+        email: 'any_email@email.com',
+        password: 'any_password',
+      },
+    };
+
+    await systemUnderTest.handle(httpRequest);
+
+    expect(authSpy).toHaveBeenCalledWith({
+      email: httpRequest.body.email,
+      password: httpRequest.body.password,
+    });
   });
 });
