@@ -1,5 +1,9 @@
-import { InvalidParamError, MissingParamError } from '../../errors';
-import { badRequest } from '../../helpers/http';
+import {
+  InvalidParamError,
+  MissingParamError,
+  ServerError,
+} from '../../errors';
+import { badRequest, serverError } from '../../helpers/http';
 import { IHttpRequest } from '../../protocols';
 import { IEmailValidator } from '../../protocols/IEmailValidator';
 import { SignInController } from './SignInController';
@@ -41,6 +45,19 @@ describe('SignInController', () => {
     expect(response).toEqual(badRequest(new MissingParamError('password')));
   });
 
+  it('should return 400 if an invalid email is provided', async () => {
+    jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false);
+
+    const httpResponse = await systemUnderTest.handle({
+      body: {
+        email: 'invalid_email@email.com',
+        password: 'any_password',
+      },
+    });
+
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')));
+  });
+
   it('should call EmailValidator with correct email', async () => {
     const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid');
 
@@ -56,8 +73,10 @@ describe('SignInController', () => {
     expect(isValidSpy).toHaveBeenCalledWith(httpRequest.body.email);
   });
 
-  it('should return 400 if an invalid email is provided', async () => {
-    jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false);
+  it('should return 500 if EmailValidator throws', async () => {
+    jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
+      throw new Error('any_error');
+    });
 
     const httpResponse = await systemUnderTest.handle({
       body: {
@@ -66,6 +85,6 @@ describe('SignInController', () => {
       },
     });
 
-    expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')));
+    expect(httpResponse).toEqual(serverError(new ServerError()));
   });
 });
