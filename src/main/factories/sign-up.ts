@@ -2,6 +2,7 @@ import { DbCreateAccount } from '../../data/usecases/create-account/DbCreateAcco
 
 import { BCryptCriptographyAdapter } from '../../infra/criptography/BCryptCriptographyAdapter';
 import { MongoAccountRepository } from '../../infra/db/mongodb/account-repository/MongoAccountRepository';
+import { MongoLogRepository } from '../../infra/db/mongodb/log-repository/MongoLogRepository';
 
 import { SignUpController } from '../../presentation/controllers/sign-up/SignUpController';
 import { IController } from '../../presentation/protocols';
@@ -26,5 +27,7 @@ export const makeSignUpController = (): IController => {
     createAccountUseCase
   );
 
-  return new LogControllerDecorator(signUpController);
+  const mongoLogRepository = new MongoLogRepository();
+
+  return new LogControllerDecorator(signUpController, mongoLogRepository);
 };
