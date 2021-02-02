@@ -1,16 +1,16 @@
 /* eslint-disable max-classes-per-file */
 import {
-  IAuthentication,
-  IAuthenticateRequestDTO,
-} from '../../../domain/usecases/IAuthentication';
-import {
   InvalidParamError,
   MissingParamError,
   ServerError,
 } from '../../errors';
 import { badRequest, serverError, unauthorized } from '../../helpers/http';
-import { IHttpRequest } from '../../protocols';
-import { IEmailValidator } from '../../protocols/IEmailValidator';
+import {
+  IEmailValidator,
+  IHttpRequest,
+  IAuthentication,
+  IAuthenticateRequestDTO,
+} from './SignInController.protocols';
 import { SignInController } from './SignInController';
 
 class EmailValidatorStub implements IEmailValidator {
