@@ -4,5 +4,5 @@ export interface IAuthenticateRequestDTO {
 }
 
 export interface IAuthentication {
-  auth(data: IAuthenticateRequestDTO): Promise<string>;
+  auth(data: IAuthenticateRequestDTO): Promise<string | null>;
 }
