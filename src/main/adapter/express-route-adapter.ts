@@ -8,6 +8,12 @@ export const adaptRoute = (controller: IController) => {
       body: req.body,
     });
 
-    return res.status(response.statusCode).json(response.body);
+    if (response.statusCode === 200) {
+      return res.status(response.statusCode).json(response.body);
+    }
+
+    return res.status(response.statusCode).json({
+      error: response.body.message,
+    });
   };
 };
