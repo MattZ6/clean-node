@@ -1,12 +1,24 @@
-import { MissingParamError } from '../../errors';
+import { InvalidParamError, MissingParamError } from '../../errors';
 import { badRequest } from '../../helpers/http';
+import { IHttpRequest } from '../../protocols';
+import { IEmailValidator } from '../../protocols/IEmailValidator';
 import { SignInController } from './SignInController';
+
+class EmailValidatorStub implements IEmailValidator {
+  isValid(_: string): boolean {
+    return true;
+  }
+}
+
+let emailValidatorStub: EmailValidatorStub;
 
 let systemUnderTest: SignInController;
 
 describe('SignInController', () => {
   beforeEach(() => {
-    systemUnderTest = new SignInController();
+    emailValidatorStub = new EmailValidatorStub();
+
+    systemUnderTest = new SignInController(emailValidatorStub);
   });
 
   it('should return 400 if no email is provided', async () => {
@@ -27,5 +39,33 @@ describe('SignInController', () => {
     });
 
     expect(response).toEqual(badRequest(new MissingParamError('password')));
+  });
+
+  it('should call EmailValidator with correct email', async () => {
+    const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid');
+
+    const httpRequest: IHttpRequest = {
+      body: {
+        email: 'any_email@email.com',
+        password: 'any_password',
+      },
+    };
+
+    await systemUnderTest.handle(httpRequest);
+
+    expect(isValidSpy).toHaveBeenCalledWith(httpRequest.body.email);
+  });
+
+  it('should return 400 if an invalid email is provided', async () => {
+    jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false);
+
+    const httpResponse = await systemUnderTest.handle({
+      body: {
+        email: 'invalid_email@email.com',
+        password: 'any_password',
+      },
+    });
+
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')));
   });
 });
