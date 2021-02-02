@@ -8,7 +8,7 @@ import {
   MissingParamError,
   ServerError,
 } from '../../errors';
-import { badRequest, serverError } from '../../helpers/http';
+import { badRequest, serverError, unauthorized } from '../../helpers/http';
 import { IHttpRequest } from '../../protocols';
 import { IEmailValidator } from '../../protocols/IEmailValidator';
 import { SignInController } from './SignInController';
@@ -19,7 +19,7 @@ class EmailValidatorStub implements IEmailValidator {
   }
 }
 class AuthenticationStub implements IAuthentication {
-  async auth(_: IAuthenticateRequestDTO): Promise<string> {
+  async auth(_: IAuthenticateRequestDTO): Promise<string | null> {
     return 'any_access_token';
   }
 }
@@ -119,5 +119,20 @@ describe('SignInController', () => {
       email: httpRequest.body.email,
       password: httpRequest.body.password,
     });
+  });
+
+  it('should return 401 invalid credentials are provided', async () => {
+    jest
+      .spyOn(authenticationStub, 'auth')
+      .mockReturnValueOnce(new Promise(res => res(null)));
+
+    const httpResponse = await systemUnderTest.handle({
+      body: {
+        email: 'invalid_email@email.com',
+        password: 'any_password',
+      },
+    });
+
+    expect(httpResponse).toEqual(unauthorized());
   });
 });
