@@ -6,6 +6,7 @@ import {
   ICreateAccount,
   ICreateAccountDTO,
   IAccountModel,
+  IValidation,
 } from './SignUpController.protocols';
 
 import {
@@ -17,6 +18,12 @@ import {
 import { IHttpRequest } from '../../protocols';
 
 import { badRequest, ok, serverError } from '../../helpers/http';
+
+class ValidationStub implements IValidation {
+  validate(_: any): Error | null {
+    return null;
+  }
+}
 
 class CreateAccountStub implements ICreateAccount {
   public async execute({
@@ -41,6 +48,7 @@ class EmailValidatorStub implements IEmailValidator {
 
 let emailValidatorStub: EmailValidatorStub;
 let createAccountStub: CreateAccountStub;
+let validationStub: ValidationStub;
 
 let systemUnderTest: SignUpController;
 
@@ -48,10 +56,12 @@ describe('SignUpController', () => {
   beforeEach(() => {
     emailValidatorStub = new EmailValidatorStub();
     createAccountStub = new CreateAccountStub();
+    validationStub = new ValidationStub();
 
     systemUnderTest = new SignUpController(
       emailValidatorStub,
-      createAccountStub
+      createAccountStub,
+      validationStub
     );
   });
 
@@ -227,5 +237,22 @@ describe('SignUpController', () => {
         password: httpRequest.body.password,
       })
     );
+  });
+
+  it('should call CreateAccount with correct values', async () => {
+    const validateSpy = jest.spyOn(validationStub, 'validate');
+
+    const httpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email@email.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password',
+      },
+    };
+
+    await systemUnderTest.handle(httpRequest);
+
+    expect(validateSpy).toHaveBeenCalledWith(httpRequest.body);
   });
 });
