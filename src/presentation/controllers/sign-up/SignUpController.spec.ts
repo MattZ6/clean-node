@@ -65,56 +65,6 @@ describe('SignUpController', () => {
     );
   });
 
-  it('should return 400 if no name is provided', async () => {
-    const httpResponse = await systemUnderTest.handle({
-      body: {
-        email: 'any_email@mail.com',
-        password: 'any_password',
-        passwordConfirmation: 'any_password',
-      },
-    });
-
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('name')));
-  });
-
-  it('should return 400 if no email is provided', async () => {
-    const httpResponse = await systemUnderTest.handle({
-      body: {
-        name: 'any_name',
-        password: 'any_password',
-        passwordConfirmation: 'any_password',
-      },
-    });
-
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('email')));
-  });
-
-  it('should return 400 if no password is provided', async () => {
-    const httpResponse = await systemUnderTest.handle({
-      body: {
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        passwordConfirmation: 'any_password',
-      },
-    });
-
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('password')));
-  });
-
-  it('should return 400 if no password confirmation is provided', async () => {
-    const httpResponse = await systemUnderTest.handle({
-      body: {
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password',
-      },
-    });
-
-    expect(httpResponse).toEqual(
-      badRequest(new MissingParamError('passwordConfirmation'))
-    );
-  });
-
   it('should return 400 if password confirmation fails', async () => {
     const httpResponse = await systemUnderTest.handle({
       body: {
