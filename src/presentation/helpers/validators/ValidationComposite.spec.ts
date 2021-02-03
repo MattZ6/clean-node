@@ -45,4 +45,12 @@ describe('ValidationComposite', () => {
 
     expect(result).toEqual(new Error());
   });
+
+  it('should return null if validation succeeds', () => {
+    const result = systemUnderTest.validate({
+      field: 'any_value',
+    });
+
+    expect(result).toBeNull();
+  });
 });
