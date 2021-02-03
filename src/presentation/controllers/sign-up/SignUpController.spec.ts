@@ -2,20 +2,13 @@
 import { SignUpController } from './SignUpController';
 
 import {
-  IEmailValidator,
   ICreateAccount,
   ICreateAccountDTO,
   IAccountModel,
   IValidation,
 } from './SignUpController.protocols';
 
-import {
-  MissingParamError,
-  InvalidParamError,
-  ServerError,
-} from '../../errors';
-
-import { IHttpRequest } from '../../protocols';
+import { MissingParamError, ServerError } from '../../errors';
 
 import { badRequest, ok, serverError } from '../../helpers/http';
 
@@ -40,13 +33,6 @@ class CreateAccountStub implements ICreateAccount {
   }
 }
 
-class EmailValidatorStub implements IEmailValidator {
-  isValid(_: string): boolean {
-    return true;
-  }
-}
-
-let emailValidatorStub: EmailValidatorStub;
 let createAccountStub: CreateAccountStub;
 let validationStub: ValidationStub;
 
@@ -54,64 +40,27 @@ let systemUnderTest: SignUpController;
 
 describe('SignUpController', () => {
   beforeEach(() => {
-    emailValidatorStub = new EmailValidatorStub();
     createAccountStub = new CreateAccountStub();
     validationStub = new ValidationStub();
 
-    systemUnderTest = new SignUpController(
-      emailValidatorStub,
-      createAccountStub,
-      validationStub
-    );
+    systemUnderTest = new SignUpController(createAccountStub, validationStub);
   });
 
-  it('should return 400 if an invalid email is provided', async () => {
-    jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false);
+  it('should return 400 if Validation returns an error', async () => {
+    const error = new MissingParamError('any_param');
+
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(error);
 
     const httpResponse = await systemUnderTest.handle({
       body: {
-        name: 'any_name',
-        email: 'invalid_email@email.com',
-        password: 'any_password',
-        passwordConfirmation: 'any_password',
+        name: 'valid_name',
+        email: 'valid_email@email.com',
+        password: 'valid_password',
+        passwordConfirmation: 'valid_password',
       },
     });
 
-    expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')));
-  });
-
-  it('should call EmailValidator with correct email', async () => {
-    const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid');
-
-    const httpRequest: IHttpRequest = {
-      body: {
-        name: 'any_name',
-        email: 'any_email@email.com',
-        password: 'any_password',
-        passwordConfirmation: 'any_password',
-      },
-    };
-
-    await systemUnderTest.handle(httpRequest);
-
-    expect(isValidSpy).toHaveBeenCalledWith(httpRequest.body.email);
-  });
-
-  it('should return 500 if EmailValidator throws', async () => {
-    jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
-      throw new Error('any_error');
-    });
-
-    const httpResponse = await systemUnderTest.handle({
-      body: {
-        name: 'any_name',
-        email: 'invalid_email@email.com',
-        password: 'any_password',
-        passwordConfirmation: 'any_password',
-      },
-    });
-
-    expect(httpResponse).toEqual(serverError(new ServerError()));
+    expect(httpResponse).toEqual(badRequest(error));
   });
 
   it('should call CreateAccount with correct values', async () => {
@@ -189,22 +138,5 @@ describe('SignUpController', () => {
     await systemUnderTest.handle(httpRequest);
 
     expect(validateSpy).toHaveBeenCalledWith(httpRequest.body);
-  });
-
-  it('should return 400 if Validation returns an eror', async () => {
-    const error = new MissingParamError('any_param');
-
-    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(error);
-
-    const httpResponse = await systemUnderTest.handle({
-      body: {
-        name: 'valid_name',
-        email: 'valid_email@email.com',
-        password: 'valid_password',
-        passwordConfirmation: 'valid_password',
-      },
-    });
-
-    expect(httpResponse).toEqual(badRequest(error));
   });
 });

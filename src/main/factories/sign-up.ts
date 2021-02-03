@@ -7,14 +7,10 @@ import { MongoLogRepository } from '../../infra/db/mongodb/log-repository/MongoL
 import { SignUpController } from '../../presentation/controllers/sign-up/SignUpController';
 import { IController } from '../../presentation/protocols';
 
-import { EmailValidatorAdapter } from '../../utils/EmailValidatorAdapter';
-
 import { LogControllerDecorator } from '../decorators/log';
 import { makeSignUpValidation } from './sign-up-validation';
 
 export const makeSignUpController = (): IController => {
-  const emailValidator = new EmailValidatorAdapter();
-
   const encrypter = new BCryptCriptographyAdapter(12);
   const accountRepository = new MongoAccountRepository();
 
@@ -24,7 +20,6 @@ export const makeSignUpController = (): IController => {
   );
 
   const signUpController = new SignUpController(
-    emailValidator,
     createAccountUseCase,
     makeSignUpValidation()
   );
