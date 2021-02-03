@@ -10,6 +10,7 @@ import { IController } from '../../presentation/protocols';
 import { EmailValidatorAdapter } from '../../utils/EmailValidatorAdapter';
 
 import { LogControllerDecorator } from '../decorators/log';
+import { makeSignUpValidation } from './sign-up-validation';
 
 export const makeSignUpController = (): IController => {
   const emailValidator = new EmailValidatorAdapter();
@@ -24,7 +25,8 @@ export const makeSignUpController = (): IController => {
 
   const signUpController = new SignUpController(
     emailValidator,
-    createAccountUseCase
+    createAccountUseCase,
+    makeSignUpValidation()
   );
 
   const mongoLogRepository = new MongoLogRepository();
