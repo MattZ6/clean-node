@@ -8,19 +8,21 @@ class ValidationStub implements IValidation {
   }
 }
 
-let validationStub: ValidationStub;
+let validationStubs: ValidationStub[];
 
 let systemUnderTest: ValidationComposite;
 
 describe('ValidationComposite', () => {
   beforeEach(() => {
-    validationStub = new ValidationStub();
+    validationStubs = [new ValidationStub(), new ValidationStub()];
 
-    systemUnderTest = new ValidationComposite([validationStub]);
+    systemUnderTest = new ValidationComposite(validationStubs);
   });
 
   it('should return an error if any validation fails', () => {
     const error = new MissingParamError('missing_field');
+
+    const [, validationStub] = validationStubs;
 
     jest.spyOn(validationStub, 'validate').mockReturnValueOnce(error);
 
@@ -29,5 +31,18 @@ describe('ValidationComposite', () => {
     });
 
     expect(result).toEqual(error);
+  });
+
+  it('should return the first error if more than one validation fails', () => {
+    jest.spyOn(validationStubs[0], 'validate').mockReturnValueOnce(new Error());
+    jest
+      .spyOn(validationStubs[1], 'validate')
+      .mockReturnValueOnce(new MissingParamError('missing_field'));
+
+    const result = systemUnderTest.validate({
+      field: 'any_value',
+    });
+
+    expect(result).toEqual(new Error());
   });
 });
