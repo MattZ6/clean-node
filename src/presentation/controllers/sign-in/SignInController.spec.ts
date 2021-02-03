@@ -1,6 +1,11 @@
 /* eslint-disable max-classes-per-file */
 import { MissingParamError, ServerError } from '../../errors';
-import { badRequest, ok, serverError, unauthorized } from '../../helpers/http';
+import {
+  badRequest,
+  ok,
+  serverError,
+  unauthorized,
+} from '../../helpers/http/http';
 import {
   IValidation,
   IAuthentication,

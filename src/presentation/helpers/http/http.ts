@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { IHttpRespose } from '../protocols';
+import { IHttpRespose } from '../../protocols';
 
-import { ServerError, UnauthorizedError } from '../errors';
+import { ServerError, UnauthorizedError } from '../../errors';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ok = (data?: any): IHttpRespose => ({

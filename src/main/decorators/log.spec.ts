@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import { ILogErrorRepository } from '../../data/protocols/ILogErrorRepository';
-import { ok, serverError } from '../../presentation/helpers/http';
+import { ok, serverError } from '../../presentation/helpers/http/http';
 import {
   IController,
   IHttpRequest,

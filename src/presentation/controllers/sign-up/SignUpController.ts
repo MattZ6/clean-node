@@ -6,7 +6,7 @@ import {
   IValidation,
 } from './SignUpController.protocols';
 
-import { ok, badRequest, serverError } from '../../helpers/http';
+import { ok, badRequest, serverError } from '../../helpers/http/http';
 
 export class SignUpController implements IController {
   constructor(

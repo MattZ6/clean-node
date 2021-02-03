@@ -10,7 +10,7 @@ import {
 
 import { MissingParamError, ServerError } from '../../errors';
 
-import { badRequest, ok, serverError } from '../../helpers/http';
+import { badRequest, ok, serverError } from '../../helpers/http/http';
 
 class ValidationStub implements IValidation {
   validate(_: any): Error | null {
