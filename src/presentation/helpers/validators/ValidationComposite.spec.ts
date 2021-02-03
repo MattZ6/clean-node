@@ -1,5 +1,5 @@
 import { MissingParamError } from '../../errors';
-import { IValidation } from './IValidation';
+import { IValidation } from '../../protocols/IValidation';
 import { ValidationComposite } from './ValidationComposite';
 
 class ValidationStub implements IValidation {
