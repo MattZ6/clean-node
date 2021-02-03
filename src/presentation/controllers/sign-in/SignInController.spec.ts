@@ -4,7 +4,7 @@ import {
   MissingParamError,
   ServerError,
 } from '../../errors';
-import { badRequest, serverError, unauthorized } from '../../helpers/http';
+import { badRequest, ok, serverError, unauthorized } from '../../helpers/http';
 import {
   IEmailValidator,
   IHttpRequest,
@@ -152,10 +152,6 @@ describe('SignInController', () => {
   });
 
   it('should return 200 if valid credentials are provided', async () => {
-    jest
-      .spyOn(authenticationStub, 'auth')
-      .mockReturnValueOnce(new Promise(res => res(null)));
-
     const httpResponse = await systemUnderTest.handle({
       body: {
         email: 'any_email@email.com',
@@ -163,6 +159,10 @@ describe('SignInController', () => {
       },
     });
 
-    expect(httpResponse).toEqual(unauthorized());
+    expect(httpResponse).toEqual(
+      ok({
+        accessToken: 'any_access_token',
+      })
+    );
   });
 });
