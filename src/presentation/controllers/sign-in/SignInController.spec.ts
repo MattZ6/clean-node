@@ -1,106 +1,51 @@
 /* eslint-disable max-classes-per-file */
-import {
-  InvalidParamError,
-  MissingParamError,
-  ServerError,
-} from '../../errors';
+import { MissingParamError, ServerError } from '../../errors';
 import { badRequest, ok, serverError, unauthorized } from '../../helpers/http';
 import {
-  IEmailValidator,
-  IHttpRequest,
+  IValidation,
   IAuthentication,
   IAuthenticateRequestDTO,
 } from './SignInController.protocols';
 import { SignInController } from './SignInController';
 
-class EmailValidatorStub implements IEmailValidator {
-  isValid(_: string): boolean {
-    return true;
+class ValidationStub implements IValidation {
+  validate(_: any): Error | null {
+    return null;
   }
 }
+
 class AuthenticationStub implements IAuthentication {
   async auth(_: IAuthenticateRequestDTO): Promise<string | null> {
     return 'any_access_token';
   }
 }
 
-let emailValidatorStub: EmailValidatorStub;
 let authenticationStub: AuthenticationStub;
+let validationStub: ValidationStub;
 
 let systemUnderTest: SignInController;
 
 describe('SignInController', () => {
   beforeEach(() => {
-    emailValidatorStub = new EmailValidatorStub();
     authenticationStub = new AuthenticationStub();
+    validationStub = new ValidationStub();
 
-    systemUnderTest = new SignInController(
-      emailValidatorStub,
-      authenticationStub
-    );
+    systemUnderTest = new SignInController(authenticationStub, validationStub);
   });
 
-  it('should return 400 if no email is provided', async () => {
-    const response = await systemUnderTest.handle({
-      body: {
-        password: 'any_password',
-      },
-    });
+  it('should return 400 if Validation returns an error', async () => {
+    const error = new MissingParamError('any_param');
 
-    expect(response).toEqual(badRequest(new MissingParamError('email')));
-  });
-
-  it('should return 400 if no password is provided', async () => {
-    const response = await systemUnderTest.handle({
-      body: {
-        email: 'any_email@email.com',
-      },
-    });
-
-    expect(response).toEqual(badRequest(new MissingParamError('password')));
-  });
-
-  it('should return 400 if an invalid email is provided', async () => {
-    jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false);
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(error);
 
     const httpResponse = await systemUnderTest.handle({
       body: {
         email: 'invalid_email@email.com',
-        password: 'any_password',
+        password: 'invalid_password',
       },
     });
 
-    expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')));
-  });
-
-  it('should call EmailValidator with correct email', async () => {
-    const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid');
-
-    const httpRequest: IHttpRequest = {
-      body: {
-        email: 'any_email@email.com',
-        password: 'any_password',
-      },
-    };
-
-    await systemUnderTest.handle(httpRequest);
-
-    expect(isValidSpy).toHaveBeenCalledWith(httpRequest.body.email);
-  });
-
-  it('should return 500 if EmailValidator throws', async () => {
-    jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
-      throw new Error('any_error');
-    });
-
-    const httpResponse = await systemUnderTest.handle({
-      body: {
-        email: 'invalid_email@email.com',
-        password: 'any_password',
-      },
-    });
-
-    expect(httpResponse).toEqual(serverError(new ServerError()));
+    expect(httpResponse).toEqual(badRequest(error));
   });
 
   it('should call Authentication with correct values', async () => {

@@ -1,7 +1,6 @@
-import { InvalidParamError, MissingParamError } from '../../errors';
 import { badRequest, ok, serverError, unauthorized } from '../../helpers/http';
 import {
-  IEmailValidator,
+  IValidation,
   IController,
   IHttpRequest,
   IHttpRespose,
@@ -10,27 +9,19 @@ import {
 
 export class SignInController implements IController {
   constructor(
-    private readonly emailValidator: IEmailValidator,
-    private readonly authentication: IAuthentication
+    private readonly authentication: IAuthentication,
+    private readonly validation: IValidation
   ) {}
 
   async handle({ body }: IHttpRequest): Promise<IHttpRespose> {
     try {
-      const requiredFields = ['email', 'password'];
+      const error = this.validation.validate(body);
 
-      for (const field of requiredFields) {
-        if (!body[field]) {
-          return badRequest(new MissingParamError(field));
-        }
+      if (error) {
+        return badRequest(error);
       }
 
       const { email, password } = body;
-
-      const isValidEmail = this.emailValidator.isValid(email);
-
-      if (!isValidEmail) {
-        return badRequest(new InvalidParamError('email'));
-      }
 
       const accessToken = await this.authentication.auth({
         email,
