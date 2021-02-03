@@ -1,3 +1,4 @@
+import { CompareFieldsValidation } from '../../presentation/helpers/validators/CompareFieldsValidation';
 import { RequiredFieldValidation } from '../../presentation/helpers/validators/RequiredFieldValidation';
 import { ValidationComposite } from '../../presentation/helpers/validators/ValidationComposite';
 import { makeSignUpValidation } from './sign-up-validation';
@@ -13,6 +14,7 @@ describe('SignUpValidation Factory', () => {
       new RequiredFieldValidation('email'),
       new RequiredFieldValidation('password'),
       new RequiredFieldValidation('passwordConfirmation'),
+      new CompareFieldsValidation('passwordConfirmation', 'password'),
     ]);
   });
 });
