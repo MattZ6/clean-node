@@ -128,7 +128,37 @@ describe('SignInController', () => {
 
     const httpResponse = await systemUnderTest.handle({
       body: {
-        email: 'invalid_email@email.com',
+        email: 'any_email@email.com',
+        password: 'any_password',
+      },
+    });
+
+    expect(httpResponse).toEqual(unauthorized());
+  });
+
+  it('should return 500 authentication throws', async () => {
+    jest.spyOn(authenticationStub, 'auth').mockImplementationOnce(() => {
+      throw new Error();
+    });
+
+    const httpResponse = await systemUnderTest.handle({
+      body: {
+        email: 'any_email@email.com',
+        password: 'any_password',
+      },
+    });
+
+    expect(httpResponse).toEqual(serverError(new ServerError()));
+  });
+
+  it('should return 200 if valid credentials are provided', async () => {
+    jest
+      .spyOn(authenticationStub, 'auth')
+      .mockReturnValueOnce(new Promise(res => res(null)));
+
+    const httpResponse = await systemUnderTest.handle({
+      body: {
+        email: 'any_email@email.com',
         password: 'any_password',
       },
     });
