@@ -1,5 +1,5 @@
 import { InvalidParamError, MissingParamError } from '../../errors';
-import { badRequest, serverError, unauthorized } from '../../helpers/http';
+import { badRequest, ok, serverError, unauthorized } from '../../helpers/http';
 import {
   IEmailValidator,
   IController,
@@ -41,7 +41,9 @@ export class SignInController implements IController {
         return unauthorized();
       }
 
-      return {} as IHttpRespose;
+      return ok({
+        accessToken,
+      });
     } catch (error) {
       return serverError(error);
     }
