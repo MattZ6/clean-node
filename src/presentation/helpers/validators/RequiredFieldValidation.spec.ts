@@ -15,4 +15,10 @@ describe('RequiredFieldValidation', () => {
 
     expect(result).toEqual(new MissingParamError(FIELD_NAME));
   });
+
+  it('should return null if validation succeeds', () => {
+    const result = systemUnderTest.validate({ [FIELD_NAME]: 'with_value' });
+
+    expect(result).toBeNull();
+  });
 });
