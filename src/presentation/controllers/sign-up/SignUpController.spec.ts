@@ -239,7 +239,7 @@ describe('SignUpController', () => {
     );
   });
 
-  it('should call CreateAccount with correct values', async () => {
+  it('should call Validation with correct values', async () => {
     const validateSpy = jest.spyOn(validationStub, 'validate');
 
     const httpRequest = {
@@ -254,5 +254,22 @@ describe('SignUpController', () => {
     await systemUnderTest.handle(httpRequest);
 
     expect(validateSpy).toHaveBeenCalledWith(httpRequest.body);
+  });
+
+  it('should return 400 if Validation returns an eror', async () => {
+    const error = new MissingParamError('any_param');
+
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(error);
+
+    const httpResponse = await systemUnderTest.handle({
+      body: {
+        name: 'valid_name',
+        email: 'valid_email@email.com',
+        password: 'valid_password',
+        passwordConfirmation: 'valid_password',
+      },
+    });
+
+    expect(httpResponse).toEqual(badRequest(error));
   });
 });
