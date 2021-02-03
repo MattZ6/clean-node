@@ -20,7 +20,11 @@ export class SignUpController implements IController {
 
   public async handle({ body }: IHttpRequest): Promise<IHttpRespose> {
     try {
-      this.validation.validate(body);
+      const error = this.validation.validate(body);
+
+      if (error) {
+        return badRequest(error);
+      }
 
       const requiredFields = [
         'name',
