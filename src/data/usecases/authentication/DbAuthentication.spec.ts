@@ -1,7 +1,18 @@
+/* eslint-disable max-classes-per-file */
 import { IAccountModel } from '../../../domain/models/IAccount';
-import { IGetAccountByEmailRepository } from '../../protocols/db/IGetAccountByEmailRepository';
+import {
+  IGetAccountByEmailRepository,
+  IHashComparer,
+} from './DbAuthentication.protocols';
 
 import { DbAuthentication } from './DbAuthentication';
+
+class HashComparerStub implements IHashComparer {
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  async compare(value: string, hashedValue: string): Promise<boolean> {
+    return true;
+  }
+}
 
 class GetAccountByEmailRepositoryStub implements IGetAccountByEmailRepository {
   async findByEmail(email: string): Promise<IAccountModel | null> {
@@ -15,14 +26,19 @@ class GetAccountByEmailRepositoryStub implements IGetAccountByEmailRepository {
 }
 
 let getAccountByEmailRepositoryStub: GetAccountByEmailRepositoryStub;
+let hashComparerStub: HashComparerStub;
 
 let systemUnderTest: DbAuthentication;
 
 describe('DbAuthentication UseCase', () => {
   beforeEach(() => {
     getAccountByEmailRepositoryStub = new GetAccountByEmailRepositoryStub();
+    hashComparerStub = new HashComparerStub();
 
-    systemUnderTest = new DbAuthentication(getAccountByEmailRepositoryStub);
+    systemUnderTest = new DbAuthentication(
+      getAccountByEmailRepositoryStub,
+      hashComparerStub
+    );
   });
 
   it('should call GetAccountByEmailRepository with correct email', async () => {
@@ -67,5 +83,18 @@ describe('DbAuthentication UseCase', () => {
     });
 
     expect(accessToken).toBeNull();
+  });
+
+  it('should call HashComparer with correct values', async () => {
+    const findByEmailSpy = jest.spyOn(hashComparerStub, 'compare');
+
+    const password = 'any_password';
+
+    await systemUnderTest.auth({
+      email: 'any_email@email.com',
+      password,
+    });
+
+    expect(findByEmailSpy).toHaveBeenCalledWith(password, 'hashed_password');
   });
 });
