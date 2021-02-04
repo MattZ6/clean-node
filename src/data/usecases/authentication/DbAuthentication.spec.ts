@@ -4,7 +4,7 @@ import { IGetAccountByEmailRepository } from '../../protocols/db/IGetAccountByEm
 import { DbAuthentication } from './DbAuthentication';
 
 class GetAccountByEmailRepositoryStub implements IGetAccountByEmailRepository {
-  async findByEmail(email: string): Promise<IAccountModel> {
+  async findByEmail(email: string): Promise<IAccountModel | null> {
     return {
       id: 'any_id',
       name: 'any_name',
@@ -54,5 +54,18 @@ describe('DbAuthentication UseCase', () => {
     });
 
     await expect(promise).rejects.toThrow();
+  });
+
+  it('should return null if GetAccountByEmailRepository returns null', async () => {
+    jest
+      .spyOn(getAccountByEmailRepositoryStub, 'findByEmail')
+      .mockReturnValue(new Promise(res => res(null)));
+
+    const accessToken = await systemUnderTest.auth({
+      email: 'any_email@email.com',
+      password: 'any_password',
+    });
+
+    expect(accessToken).toBeNull();
   });
 });

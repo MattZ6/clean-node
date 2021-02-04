@@ -10,7 +10,7 @@ export class DbAuthentication implements IAuthentication {
   ) {}
 
   async auth({ email }: IAuthenticateRequestDTO): Promise<string | null> {
-    this.getAccountByEmailRepository.findByEmail(email);
+    await this.getAccountByEmailRepository.findByEmail(email);
 
     return null;
   }
