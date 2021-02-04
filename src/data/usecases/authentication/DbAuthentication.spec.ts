@@ -1,5 +1,5 @@
 import { IAccountModel } from '../../../domain/models/IAccount';
-import { IGetAccountByEmailRepository } from '../../protocols/IGetAccountByEmailRepository';
+import { IGetAccountByEmailRepository } from '../../protocols/db/IGetAccountByEmailRepository';
 
 import { DbAuthentication } from './DbAuthentication';
 

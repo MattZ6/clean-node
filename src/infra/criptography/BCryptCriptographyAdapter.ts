@@ -1,6 +1,6 @@
 import { hash } from 'bcrypt';
 
-import { IEncrypter } from '../../data/protocols/IEncrypter';
+import { IEncrypter } from '../../data/protocols/criptography/IEncrypter';
 
 export class BCryptCriptographyAdapter implements IEncrypter {
   constructor(private readonly salt: number) {}

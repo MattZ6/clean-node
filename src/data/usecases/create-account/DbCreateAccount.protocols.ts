@@ -1,4 +1,4 @@
 export * from '../../../domain/models/IAccount';
 export * from '../../../domain/usecases/ICreateAccount';
-export * from '../../protocols/ICreateAccountRepository';
-export * from '../../protocols/IEncrypter';
+export * from '../../protocols/db/ICreateAccountRepository';
+export * from '../../protocols/criptography/IEncrypter';

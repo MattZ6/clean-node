@@ -4,7 +4,7 @@ import {
   IHttpRespose,
 } from '../../presentation/protocols';
 
-import { ILogErrorRepository } from '../../data/protocols/ILogErrorRepository';
+import { ILogErrorRepository } from '../../data/protocols/db/ILogErrorRepository';
 
 export class LogControllerDecorator implements IController {
   constructor(
