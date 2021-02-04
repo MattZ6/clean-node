@@ -21,7 +21,14 @@ export class DbAuthentication implements IAuthentication {
       return null;
     }
 
-    await this.hashComparer.compare(password, account.password);
+    const passwordsMatch = await this.hashComparer.compare(
+      password,
+      account.password
+    );
+
+    if (!passwordsMatch) {
+      return null;
+    }
 
     return null;
   }

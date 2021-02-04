@@ -110,4 +110,17 @@ describe('DbAuthentication UseCase', () => {
 
     await expect(promise).rejects.toThrow();
   });
+
+  it('should return null if HashComparer returns false', async () => {
+    jest
+      .spyOn(hashComparerStub, 'compare')
+      .mockReturnValueOnce(new Promise(res => res(false)));
+
+    const accessToken = await systemUnderTest.auth({
+      email: 'any_email@email.com',
+      password: 'any_password',
+    });
+
+    expect(accessToken).toBeNull();
+  });
 });
