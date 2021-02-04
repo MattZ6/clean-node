@@ -40,4 +40,19 @@ describe('DbAuthentication UseCase', () => {
 
     expect(findByEmailSpy).toHaveBeenCalledWith(email);
   });
+
+  it('should throw if GetAccountByEmailRepository throws', async () => {
+    jest
+      .spyOn(getAccountByEmailRepositoryStub, 'findByEmail')
+      .mockImplementationOnce(() => {
+        throw new Error();
+      });
+
+    const promise = systemUnderTest.auth({
+      email: 'any_email@email.com',
+      password: 'any_password',
+    });
+
+    await expect(promise).rejects.toThrow();
+  });
 });
