@@ -1,6 +1,6 @@
-import { MissingParamError } from '../../errors';
-import { IValidation } from '../../protocols/IValidation';
-import { ValidationComposite } from './ValidationComposite';
+import { MissingParamError } from '../../../errors';
+import { IValidation } from '../../../protocols/IValidation';
+import { ValidationComposite } from '.';
 
 class ValidationStub implements IValidation {
   validate(_: any): Error | null {

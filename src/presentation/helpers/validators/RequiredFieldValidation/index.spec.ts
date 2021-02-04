@@ -1,5 +1,5 @@
-import { MissingParamError } from '../../errors';
-import { RequiredFieldValidation } from './RequiredFieldValidation';
+import { MissingParamError } from '../../../errors';
+import { RequiredFieldValidation } from '.';
 
 let systemUnderTest: RequiredFieldValidation;
 

@@ -1,8 +1,10 @@
-import { CompareFieldsValidation } from '../../../presentation/helpers/validators/CompareFieldsValidation';
-import { EmailValidaton } from '../../../presentation/helpers/validators/EmailValidation';
 import { IValidation } from '../../../presentation/protocols/IValidation';
-import { RequiredFieldValidation } from '../../../presentation/helpers/validators/RequiredFieldValidation';
-import { ValidationComposite } from '../../../presentation/helpers/validators/ValidationComposite';
+import {
+  CompareFieldsValidation,
+  RequiredFieldValidation,
+  ValidationComposite,
+  EmailValidation,
+} from '../../../presentation/helpers/validators';
 import { EmailValidatorAdapter } from '../../../utils/EmailValidatorAdapter';
 
 export const makeSignUpValidation = (): IValidation => {
@@ -12,6 +14,6 @@ export const makeSignUpValidation = (): IValidation => {
     new RequiredFieldValidation('password'),
     new RequiredFieldValidation('passwordConfirmation'),
     new CompareFieldsValidation('passwordConfirmation', 'password'),
-    new EmailValidaton('email', new EmailValidatorAdapter()),
+    new EmailValidation('email', new EmailValidatorAdapter()),
   ]);
 };

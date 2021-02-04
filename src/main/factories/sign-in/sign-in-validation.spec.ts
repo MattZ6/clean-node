@@ -1,8 +1,10 @@
-import { EmailValidaton } from '../../../presentation/helpers/validators/EmailValidation';
-import { RequiredFieldValidation } from '../../../presentation/helpers/validators/RequiredFieldValidation';
-import { ValidationComposite } from '../../../presentation/helpers/validators/ValidationComposite';
-import { IEmailValidator } from '../../../presentation/protocols/IEmailValidator';
 import { makeSignInValidation } from './sign-in-validation';
+import {
+  EmailValidation,
+  RequiredFieldValidation,
+  ValidationComposite,
+} from '../../../presentation/helpers/validators';
+import { IEmailValidator } from '../../../presentation/protocols/IEmailValidator';
 
 jest.mock('../../../presentation/helpers/validators/ValidationComposite');
 
@@ -25,7 +27,7 @@ describe('SignInValidation Factory', () => {
     expect(ValidationComposite).toHaveBeenCalledWith([
       new RequiredFieldValidation('email'),
       new RequiredFieldValidation('password'),
-      new EmailValidaton('email', emailValidatorStub),
+      new EmailValidation('email', emailValidatorStub),
     ]);
   });
 });

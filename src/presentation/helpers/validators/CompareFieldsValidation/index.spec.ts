@@ -1,5 +1,5 @@
-import { InvalidParamError } from '../../errors';
-import { CompareFieldsValidation } from './CompareFieldsValidation';
+import { InvalidParamError } from '../../../errors';
+import { CompareFieldsValidation } from '.';
 
 let systemUnderTest: CompareFieldsValidation;
 

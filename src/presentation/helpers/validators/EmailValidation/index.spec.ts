@@ -1,8 +1,8 @@
 // eslint-disable-next-line max-classes-per-file
-import { InvalidParamError } from '../../errors';
-import { IEmailValidator } from '../../protocols/IEmailValidator';
+import { InvalidParamError } from '../../../errors';
+import { IEmailValidator } from '../../../protocols/IEmailValidator';
 
-import { EmailValidaton } from './EmailValidation';
+import { EmailValidation } from '.';
 
 class EmailValidatorStub implements IEmailValidator {
   isValid(_: string): boolean {
@@ -12,13 +12,13 @@ class EmailValidatorStub implements IEmailValidator {
 
 let emailValidatorStub: EmailValidatorStub;
 
-let systemUnderTest: EmailValidaton;
+let systemUnderTest: EmailValidation;
 
 describe('EmailValidaton', () => {
   beforeEach(() => {
     emailValidatorStub = new EmailValidatorStub();
 
-    systemUnderTest = new EmailValidaton('email', emailValidatorStub);
+    systemUnderTest = new EmailValidation('email', emailValidatorStub);
   });
 
   it('should return InvalidParamError if EmailValidator returns false', () => {
