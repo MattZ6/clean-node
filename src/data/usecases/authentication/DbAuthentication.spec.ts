@@ -97,4 +97,17 @@ describe('DbAuthentication UseCase', () => {
 
     expect(findByEmailSpy).toHaveBeenCalledWith(password, 'hashed_password');
   });
+
+  it('should throw if HashComparer throws', async () => {
+    jest.spyOn(hashComparerStub, 'compare').mockImplementationOnce(() => {
+      throw new Error();
+    });
+
+    const promise = systemUnderTest.auth({
+      email: 'any_email@email.com',
+      password: 'any_password',
+    });
+
+    await expect(promise).rejects.toThrow();
+  });
 });
