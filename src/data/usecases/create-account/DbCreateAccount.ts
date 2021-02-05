@@ -1,5 +1,5 @@
 import {
-  IEncrypter,
+  IHasher,
   ICreateAccount,
   ICreateAccountDTO,
   ICreateAccountRepository,
@@ -8,7 +8,7 @@ import {
 
 export class DbCreateAccount implements ICreateAccount {
   constructor(
-    private readonly encrypter: IEncrypter,
+    private readonly hasher: IHasher,
     private readonly createAccountRepository: ICreateAccountRepository
   ) {}
 
@@ -17,7 +17,7 @@ export class DbCreateAccount implements ICreateAccount {
     email,
     password,
   }: ICreateAccountDTO): Promise<IAccountModel> {
-    const passwordHash = await this.encrypter.encrypt(password);
+    const passwordHash = await this.hasher.hash(password);
 
     const account = await this.createAccountRepository.create({
       name,

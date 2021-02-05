@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import {
-  IEncrypter,
+  IHasher,
   ICreateAccountDTO,
   ICreateAccountRepository,
   IAccountModel,
@@ -8,8 +8,8 @@ import {
 
 import { DbCreateAccount } from './DbCreateAccount';
 
-class EncrypterStub implements IEncrypter {
-  async encrypt(_: string): Promise<string> {
+class HasherStub implements IHasher {
+  async hash(_: string): Promise<string> {
     return 'hashed_password';
   }
 }
@@ -31,24 +31,24 @@ class CreateAccountRepositoryStub implements ICreateAccountRepository {
   }
 }
 
-let encrypterStub: EncrypterStub;
+let hasherStub: HasherStub;
 let createAccountRepositoryStub: CreateAccountRepositoryStub;
 
 let systemUnderTest: DbCreateAccount;
 
 describe('DbCreateAccount use case', () => {
   beforeEach(() => {
-    encrypterStub = new EncrypterStub();
+    hasherStub = new HasherStub();
     createAccountRepositoryStub = new CreateAccountRepositoryStub();
 
     systemUnderTest = new DbCreateAccount(
-      encrypterStub,
+      hasherStub,
       createAccountRepositoryStub
     );
   });
 
-  it('should call Encrypter with correct password', async () => {
-    const encryptSpy = jest.spyOn(encrypterStub, 'encrypt');
+  it('should call Hasher with correct password', async () => {
+    const hashSpy = jest.spyOn(hasherStub, 'hash');
 
     const password = 'valid_password';
 
@@ -58,12 +58,12 @@ describe('DbCreateAccount use case', () => {
       password,
     });
 
-    expect(encryptSpy).toHaveBeenCalledWith(password);
+    expect(hashSpy).toHaveBeenCalledWith(password);
   });
 
-  it('should throw if Encrypter throws', async () => {
+  it('should throw if Hasher throws', async () => {
     jest
-      .spyOn(encrypterStub, 'encrypt')
+      .spyOn(hasherStub, 'hash')
       .mockReturnValueOnce(new Promise((_, reject) => reject(new Error())));
 
     const promise = systemUnderTest.execute({

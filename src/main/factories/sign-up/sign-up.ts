@@ -11,13 +11,10 @@ import { LogControllerDecorator } from '../../decorators/log';
 import { makeSignUpValidation } from './sign-up-validation';
 
 export const makeSignUpController = (): IController => {
-  const encrypter = new BCryptCriptographyAdapter(12);
+  const hasher = new BCryptCriptographyAdapter(12);
   const accountRepository = new MongoAccountRepository();
 
-  const createAccountUseCase = new DbCreateAccount(
-    encrypter,
-    accountRepository
-  );
+  const createAccountUseCase = new DbCreateAccount(hasher, accountRepository);
 
   const signUpController = new SignUpController(
     createAccountUseCase,

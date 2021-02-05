@@ -1,11 +1,11 @@
 import { hash } from 'bcrypt';
 
-import { IEncrypter } from '../../data/protocols/criptography/IEncrypter';
+import { IHasher } from '../../data/protocols/criptography/IHasher';
 
-export class BCryptCriptographyAdapter implements IEncrypter {
+export class BCryptCriptographyAdapter implements IHasher {
   constructor(private readonly salt: number) {}
 
-  async encrypt(value: string): Promise<string> {
+  async hash(value: string): Promise<string> {
     const hashedValue = await hash(value, this.salt);
 
     return hashedValue;
