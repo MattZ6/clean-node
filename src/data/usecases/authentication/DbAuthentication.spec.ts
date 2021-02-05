@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
-import { IAccountModel } from '../../../domain/models/IAccount';
 import {
+  IAccountModel,
   IGetAccountByEmailRepository,
   IHashComparer,
   ITokenGenerator,
