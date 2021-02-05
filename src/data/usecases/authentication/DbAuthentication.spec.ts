@@ -195,4 +195,19 @@ describe('DbAuthentication UseCase', () => {
       accessToken,
     });
   });
+
+  it('should throw if UpdateAccessTokenRepository throws', async () => {
+    jest
+      .spyOn(updateAccessTokenRepositoryStub, 'update')
+      .mockImplementationOnce(() => {
+        throw new Error();
+      });
+
+    const promise = systemUnderTest.auth({
+      email: 'any_email@email.com',
+      password: 'any_password',
+    });
+
+    await expect(promise).rejects.toThrow();
+  });
 });
