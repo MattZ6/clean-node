@@ -3,7 +3,7 @@ import {
   IAuthenticateRequestDTO,
   IGetAccountByEmailRepository,
   IHashComparer,
-  ITokenGenerator,
+  IEncrypter,
   IUpdateAccessTokenRepository,
 } from './DbAuthentication.protocols';
 
@@ -11,7 +11,7 @@ export class DbAuthentication implements IAuthentication {
   constructor(
     private readonly getAccountByEmailRepository: IGetAccountByEmailRepository,
     private readonly hashComparer: IHashComparer,
-    private readonly tokenGenerator: ITokenGenerator,
+    private readonly encrypter: IEncrypter,
     private readonly updateAccessTokenRepository: IUpdateAccessTokenRepository
   ) {}
 
@@ -34,7 +34,7 @@ export class DbAuthentication implements IAuthentication {
       return null;
     }
 
-    const accessToken = await this.tokenGenerator.generate(account.id);
+    const accessToken = await this.encrypter.encrypt(account.id);
 
     await this.updateAccessTokenRepository.update({
       accountId: account.id,

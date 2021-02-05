@@ -3,7 +3,7 @@ import {
   IAccountModel,
   IGetAccountByEmailRepository,
   IHashComparer,
-  ITokenGenerator,
+  IEncrypter,
   IUpdateAccessTokenRepository,
   IUpdateAccessTokenDataDTO,
 } from './DbAuthentication.protocols';
@@ -18,8 +18,8 @@ class UpdateAccessTokenRepositoryStub implements IUpdateAccessTokenRepository {
 
 const GENERATED_ACCESS_TOKEN = 'any_token';
 
-class TokenGeneratorStub implements ITokenGenerator {
-  async generate(_: string): Promise<string> {
+class EncrypterStub implements IEncrypter {
+  async encrypt(_: string): Promise<string> {
     return GENERATED_ACCESS_TOKEN;
   }
 }
@@ -46,7 +46,7 @@ class GetAccountByEmailRepositoryStub implements IGetAccountByEmailRepository {
 
 let getAccountByEmailRepositoryStub: GetAccountByEmailRepositoryStub;
 let hashComparerStub: HashComparerStub;
-let tokenGeneratorStub: TokenGeneratorStub;
+let encrypterStub: EncrypterStub;
 let updateAccessTokenRepositoryStub: UpdateAccessTokenRepositoryStub;
 
 let systemUnderTest: DbAuthentication;
@@ -55,13 +55,13 @@ describe('DbAuthentication UseCase', () => {
   beforeEach(() => {
     getAccountByEmailRepositoryStub = new GetAccountByEmailRepositoryStub();
     hashComparerStub = new HashComparerStub();
-    tokenGeneratorStub = new TokenGeneratorStub();
+    encrypterStub = new EncrypterStub();
     updateAccessTokenRepositoryStub = new UpdateAccessTokenRepositoryStub();
 
     systemUnderTest = new DbAuthentication(
       getAccountByEmailRepositoryStub,
       hashComparerStub,
-      tokenGeneratorStub,
+      encrypterStub,
       updateAccessTokenRepositoryStub
     );
   });
@@ -149,8 +149,8 @@ describe('DbAuthentication UseCase', () => {
     expect(accessToken).toBeNull();
   });
 
-  it('should call TokenGenerator with correct id', async () => {
-    const generateSpy = jest.spyOn(tokenGeneratorStub, 'generate');
+  it('should call Encrypter with correct value', async () => {
+    const generateSpy = jest.spyOn(encrypterStub, 'encrypt');
 
     await systemUnderTest.auth({
       email: 'any_email@email.com',
@@ -160,8 +160,8 @@ describe('DbAuthentication UseCase', () => {
     expect(generateSpy).toHaveBeenCalledWith(ACCOUNT_ID);
   });
 
-  it('should throw if TokenGenerator throws', async () => {
-    jest.spyOn(tokenGeneratorStub, 'generate').mockImplementationOnce(() => {
+  it('should throw if Encrypter throws', async () => {
+    jest.spyOn(encrypterStub, 'encrypt').mockImplementationOnce(() => {
       throw new Error();
     });
 
