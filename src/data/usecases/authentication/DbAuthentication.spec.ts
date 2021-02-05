@@ -8,9 +8,11 @@ import {
 
 import { DbAuthentication } from './DbAuthentication';
 
+const GENERATED_ACCESS_TOKEN = 'any_token';
+
 class TokenGeneratorStub implements ITokenGenerator {
   async generate(_: string): Promise<string> {
-    return 'any_token';
+    return GENERATED_ACCESS_TOKEN;
   }
 }
 
@@ -156,5 +158,14 @@ describe('DbAuthentication UseCase', () => {
     });
 
     await expect(promise).rejects.toThrow();
+  });
+
+  it('should return a access token on success', async () => {
+    const accessToken = await systemUnderTest.auth({
+      email: 'any_email@email.com',
+      password: 'any_password',
+    });
+
+    expect(accessToken).toBe(GENERATED_ACCESS_TOKEN);
   });
 });
