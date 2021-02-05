@@ -3,9 +3,16 @@ import { IAccountModel } from '../../../domain/models/IAccount';
 import {
   IGetAccountByEmailRepository,
   IHashComparer,
+  ITokenGenerator,
 } from './DbAuthentication.protocols';
 
 import { DbAuthentication } from './DbAuthentication';
+
+class TokenGeneratorStub implements ITokenGenerator {
+  async generate(_: string): Promise<string> {
+    return 'any_token';
+  }
+}
 
 class HashComparerStub implements IHashComparer {
   /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -27,6 +34,7 @@ class GetAccountByEmailRepositoryStub implements IGetAccountByEmailRepository {
 
 let getAccountByEmailRepositoryStub: GetAccountByEmailRepositoryStub;
 let hashComparerStub: HashComparerStub;
+let tokenGeneratorStub: TokenGeneratorStub;
 
 let systemUnderTest: DbAuthentication;
 
@@ -34,10 +42,12 @@ describe('DbAuthentication UseCase', () => {
   beforeEach(() => {
     getAccountByEmailRepositoryStub = new GetAccountByEmailRepositoryStub();
     hashComparerStub = new HashComparerStub();
+    tokenGeneratorStub = new TokenGeneratorStub();
 
     systemUnderTest = new DbAuthentication(
       getAccountByEmailRepositoryStub,
-      hashComparerStub
+      hashComparerStub,
+      tokenGeneratorStub
     );
   });
 
@@ -122,5 +132,16 @@ describe('DbAuthentication UseCase', () => {
     });
 
     expect(accessToken).toBeNull();
+  });
+
+  it('should call TokenGenerator with correct id', async () => {
+    const generateSpy = jest.spyOn(tokenGeneratorStub, 'generate');
+
+    await systemUnderTest.auth({
+      email: 'any_email@email.com',
+      password: 'any_password',
+    });
+
+    expect(generateSpy).toHaveBeenCalledWith('any_id');
   });
 });
