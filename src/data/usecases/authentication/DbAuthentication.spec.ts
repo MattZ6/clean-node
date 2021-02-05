@@ -4,9 +4,17 @@ import {
   IGetAccountByEmailRepository,
   IHashComparer,
   ITokenGenerator,
+  IUpdateAccessTokenRepository,
+  IUpdateAccessTokenDataDTO,
 } from './DbAuthentication.protocols';
 
 import { DbAuthentication } from './DbAuthentication';
+
+class UpdateAccessTokenRepositoryStub implements IUpdateAccessTokenRepository {
+  async update(_: IUpdateAccessTokenDataDTO): Promise<void> {
+    // return GENERATED_ACCESS_TOKEN;
+  }
+}
 
 const GENERATED_ACCESS_TOKEN = 'any_token';
 
@@ -23,10 +31,12 @@ class HashComparerStub implements IHashComparer {
   }
 }
 
+const ACCOUNT_ID = 'any_id';
+
 class GetAccountByEmailRepositoryStub implements IGetAccountByEmailRepository {
   async findByEmail(email: string): Promise<IAccountModel | null> {
     return {
-      id: 'any_id',
+      id: ACCOUNT_ID,
       name: 'any_name',
       email,
       password: 'hashed_password',
@@ -37,6 +47,7 @@ class GetAccountByEmailRepositoryStub implements IGetAccountByEmailRepository {
 let getAccountByEmailRepositoryStub: GetAccountByEmailRepositoryStub;
 let hashComparerStub: HashComparerStub;
 let tokenGeneratorStub: TokenGeneratorStub;
+let updateAccessTokenRepositoryStub: UpdateAccessTokenRepositoryStub;
 
 let systemUnderTest: DbAuthentication;
 
@@ -45,11 +56,13 @@ describe('DbAuthentication UseCase', () => {
     getAccountByEmailRepositoryStub = new GetAccountByEmailRepositoryStub();
     hashComparerStub = new HashComparerStub();
     tokenGeneratorStub = new TokenGeneratorStub();
+    updateAccessTokenRepositoryStub = new UpdateAccessTokenRepositoryStub();
 
     systemUnderTest = new DbAuthentication(
       getAccountByEmailRepositoryStub,
       hashComparerStub,
-      tokenGeneratorStub
+      tokenGeneratorStub,
+      updateAccessTokenRepositoryStub
     );
   });
 
@@ -144,7 +157,7 @@ describe('DbAuthentication UseCase', () => {
       password: 'any_password',
     });
 
-    expect(generateSpy).toHaveBeenCalledWith('any_id');
+    expect(generateSpy).toHaveBeenCalledWith(ACCOUNT_ID);
   });
 
   it('should throw if TokenGenerator throws', async () => {
@@ -167,5 +180,19 @@ describe('DbAuthentication UseCase', () => {
     });
 
     expect(accessToken).toBe(GENERATED_ACCESS_TOKEN);
+  });
+
+  it('should call UpdateAccessTokenRepository with correct values', async () => {
+    const updateSpy = jest.spyOn(updateAccessTokenRepositoryStub, 'update');
+
+    const accessToken = await systemUnderTest.auth({
+      email: 'any_email@email.com',
+      password: 'any_password',
+    });
+
+    expect(updateSpy).toHaveBeenCalledWith({
+      accountId: ACCOUNT_ID,
+      accessToken,
+    });
   });
 });
