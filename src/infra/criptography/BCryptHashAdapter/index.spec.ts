@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt';
 
-import { BCryptCriptographyAdapter } from './BCryptCriptographyAdapter';
+import { BCryptHashAdapter } from '.';
 
-let systemUnderTest: BCryptCriptographyAdapter;
+let systemUnderTest: BCryptHashAdapter;
 
 const BCRYPT_SALT = 12;
 
@@ -17,9 +17,9 @@ jest.mock('bcrypt', () => ({
   },
 }));
 
-describe('BCryptCriptographyAdapter', () => {
+describe('BCryptHashAdapter', () => {
   beforeEach(() => {
-    systemUnderTest = new BCryptCriptographyAdapter(BCRYPT_SALT);
+    systemUnderTest = new BCryptHashAdapter(BCRYPT_SALT);
   });
 
   it('should call hash method with correct values', async () => {

@@ -1,6 +1,6 @@
 import { DbCreateAccount } from '../../../data/usecases/create-account/DbCreateAccount';
 
-import { BCryptCriptographyAdapter } from '../../../infra/criptography/BCryptCriptographyAdapter';
+import { BCryptHashAdapter } from '../../../infra/criptography/BCryptHashAdapter';
 import { MongoAccountRepository } from '../../../infra/db/mongodb/account-repository/MongoAccountRepository';
 import { MongoLogRepository } from '../../../infra/db/mongodb/log-repository/MongoLogRepository';
 
@@ -11,7 +11,7 @@ import { LogControllerDecorator } from '../../decorators/log';
 import { makeSignUpValidation } from './sign-up-validation';
 
 export const makeSignUpController = (): IController => {
-  const hasher = new BCryptCriptographyAdapter(12);
+  const hasher = new BCryptHashAdapter(12);
   const accountRepository = new MongoAccountRepository();
 
   const createAccountUseCase = new DbCreateAccount(hasher, accountRepository);
