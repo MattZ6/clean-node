@@ -3,12 +3,14 @@ import {
   IAuthenticateRequestDTO,
   IGetAccountByEmailRepository,
   IHashComparer,
+  ITokenGenerator,
 } from './DbAuthentication.protocols';
 
 export class DbAuthentication implements IAuthentication {
   constructor(
     private readonly getAccountByEmailRepository: IGetAccountByEmailRepository,
-    private readonly hashComparer: IHashComparer
+    private readonly hashComparer: IHashComparer,
+    private readonly tokenGenerator: ITokenGenerator
   ) {}
 
   async auth({
@@ -29,6 +31,8 @@ export class DbAuthentication implements IAuthentication {
     if (!passwordsMatch) {
       return null;
     }
+
+    await this.tokenGenerator.generate(account.id);
 
     return null;
   }
