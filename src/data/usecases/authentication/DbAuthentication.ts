@@ -4,13 +4,15 @@ import {
   IGetAccountByEmailRepository,
   IHashComparer,
   ITokenGenerator,
+  IUpdateAccessTokenRepository,
 } from './DbAuthentication.protocols';
 
 export class DbAuthentication implements IAuthentication {
   constructor(
     private readonly getAccountByEmailRepository: IGetAccountByEmailRepository,
     private readonly hashComparer: IHashComparer,
-    private readonly tokenGenerator: ITokenGenerator
+    private readonly tokenGenerator: ITokenGenerator,
+    private readonly updateAccessTokenRepository: IUpdateAccessTokenRepository
   ) {}
 
   async auth({
@@ -32,6 +34,13 @@ export class DbAuthentication implements IAuthentication {
       return null;
     }
 
-    return this.tokenGenerator.generate(account.id);
+    const accessToken = await this.tokenGenerator.generate(account.id);
+
+    await this.updateAccessTokenRepository.update({
+      accountId: account.id,
+      accessToken,
+    });
+
+    return accessToken;
   }
 }
