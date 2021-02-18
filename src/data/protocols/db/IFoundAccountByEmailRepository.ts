@@ -1,5 +1,5 @@
 import { IAccountModel } from '../../../domain/models/IAccount';
 
-export interface IGetAccountByEmailRepository {
+export interface IFoundAccountByEmailRepository {
   findByEmail(email: string): Promise<IAccountModel | null>;
 }

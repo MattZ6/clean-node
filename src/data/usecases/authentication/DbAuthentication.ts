@@ -1,7 +1,7 @@
 import {
   IAuthentication,
   IAuthenticateRequestDTO,
-  IGetAccountByEmailRepository,
+  IFoundAccountByEmailRepository,
   IHashComparer,
   IEncrypter,
   IUpdateAccessTokenRepository,
@@ -9,7 +9,7 @@ import {
 
 export class DbAuthentication implements IAuthentication {
   constructor(
-    private readonly getAccountByEmailRepository: IGetAccountByEmailRepository,
+    private readonly getAccountByEmailRepository: IFoundAccountByEmailRepository,
     private readonly hashComparer: IHashComparer,
     private readonly encrypter: IEncrypter,
     private readonly updateAccessTokenRepository: IUpdateAccessTokenRepository

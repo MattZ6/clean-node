@@ -1,7 +1,7 @@
 /* eslint-disable max-classes-per-file */
 import {
   IAccountModel,
-  IGetAccountByEmailRepository,
+  IFoundAccountByEmailRepository,
   IHashComparer,
   IEncrypter,
   IUpdateAccessTokenRepository,
@@ -33,7 +33,8 @@ class HashComparerStub implements IHashComparer {
 
 const ACCOUNT_ID = 'any_id';
 
-class GetAccountByEmailRepositoryStub implements IGetAccountByEmailRepository {
+class GetAccountByEmailRepositoryStub
+  implements IFoundAccountByEmailRepository {
   async findByEmail(email: string): Promise<IAccountModel | null> {
     return {
       id: ACCOUNT_ID,
