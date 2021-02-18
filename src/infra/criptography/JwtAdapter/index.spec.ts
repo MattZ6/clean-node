@@ -24,9 +24,13 @@ describe('JwtAdapter', () => {
   });
 
   it('should return a token on sign success', async () => {
+    jest
+      .spyOn(jsonwebtoken, 'sign')
+      .mockImplementationOnce(() => 'encrypted_value');
+
     const token = await sut.encrypt('any_id');
 
-    expect(token).toBe('any_token');
+    expect(token).toBe('encrypted_value');
   });
 
   it('should throw if sign throws', async () => {
