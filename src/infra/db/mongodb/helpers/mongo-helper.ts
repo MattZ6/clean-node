@@ -7,7 +7,7 @@ interface IMongoHelper {
   client: MongoClient | null;
   connect(uri: string): Promise<void>;
   disconnect(): Promise<void>;
-  getCollection(name: string): Promise<Collection>;
+  getCollection<T = any>(name: string): Promise<Collection<T>>;
   mapTo<T = any>(data: any): T;
 }
 

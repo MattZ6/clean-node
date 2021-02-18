@@ -1,11 +1,13 @@
 import { ICreateAccountRepository } from '../../../../data/protocols/db/ICreateAccountRepository';
+import { IFindAccountByEmailRepository } from '../../../../data/protocols/db/IFindAccountByEmailRepository';
 
 import { ICreateAccountDTO } from '../../../../domain/usecases/ICreateAccount';
 import { IAccountModel } from '../../../../domain/models/IAccount';
 
 import { mongoHelper } from '../helpers/mongo-helper';
 
-export class MongoAccountRepository implements ICreateAccountRepository {
+export class MongoAccountRepository
+  implements ICreateAccountRepository, IFindAccountByEmailRepository {
   async create({
     name,
     email,
@@ -19,8 +21,20 @@ export class MongoAccountRepository implements ICreateAccountRepository {
       password,
     });
 
-    const account = mongoHelper.mapTo<IAccountModel>(result.ops[0]);
+    return mongoHelper.mapTo<IAccountModel>(result.ops[0]);
+  }
 
-    return account;
+  async findByEmail(email: string): Promise<IAccountModel | null> {
+    const accountsCollection = await mongoHelper.getCollection<IAccountModel>(
+      'accounts'
+    );
+
+    const account = await accountsCollection.findOne({ email });
+
+    if (!account) {
+      return null;
+    }
+
+    return mongoHelper.mapTo<IAccountModel>(account);
   }
 }
