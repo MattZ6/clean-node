@@ -28,4 +28,14 @@ describe('JwtAdapter', () => {
 
     expect(token).toBe('any_token');
   });
+
+  it('should throw if sign throws', async () => {
+    jest.spyOn(jsonwebtoken, 'sign').mockImplementationOnce(() => {
+      throw new Error();
+    });
+
+    const promise = sut.encrypt('any_id');
+
+    await expect(promise).rejects.toThrow();
+  });
 });
