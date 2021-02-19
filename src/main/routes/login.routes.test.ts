@@ -4,7 +4,7 @@ import app from '../config/app';
 
 import { mongoHelper } from '../../infra/db/mongodb/helpers/mongo-helper';
 
-describe('SignUp routes', () => {
+describe('SignIn routes', () => {
   beforeAll(async () => {
     await mongoHelper.connect(process.env.MONGO_URL ?? '');
   });
@@ -19,15 +19,17 @@ describe('SignUp routes', () => {
     await accountsCollection.deleteMany({});
   });
 
-  it('should return an account on success', async () => {
-    await supertest(app)
-      .post('/api/v1/sign_up')
-      .send({
-        name: 'Usuário',
-        email: 'usuario.teste@gmail.com',
-        password: '123',
-        passwordConfirmation: '123',
-      })
-      .expect(200);
+  describe('POST /signup', () => {
+    it('should return 200 on sign up', async () => {
+      await supertest(app)
+        .post('/api/v1/signup')
+        .send({
+          name: 'Usuário',
+          email: 'usuario.teste@gmail.com',
+          password: '123',
+          passwordConfirmation: '123',
+        })
+        .expect(200);
+    });
   });
 });
