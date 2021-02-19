@@ -1,7 +1,7 @@
 {
   "name": "clean-node",
   "description": "Node.js training using Clean Architecture, TDD, DDD and SOLID concepts.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "author": {
     "name": "Matheus Felipe Zanin",
