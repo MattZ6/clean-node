@@ -59,5 +59,18 @@ describe('SignIn routes', () => {
         })
         .expect(200);
     });
+
+    it('should return 401 on sign in', async () => {
+      const email = 'usuario.teste@gmail.com';
+      const password = '123';
+
+      await supertest(app)
+        .post('/api/v1/login')
+        .send({
+          email,
+          password,
+        })
+        .expect(401);
+    });
   });
 });
