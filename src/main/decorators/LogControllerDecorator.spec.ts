@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import { ILogErrorRepository } from '../../data/protocols/db/ILogErrorRepository';
+import { ILogErrorRepository } from '../../data/protocols/db/log/ILogErrorRepository';
 import { ok, serverError } from '../../presentation/helpers/http/http';
 import {
   IController,
@@ -7,7 +7,7 @@ import {
   IHttpRespose,
 } from '../../presentation/protocols';
 
-import { LogControllerDecorator } from './log';
+import { LogControllerDecorator } from './LogControllerDecorator';
 
 class ControllerStub implements IController {
   async handle(_: IHttpRequest): Promise<IHttpRespose> {

@@ -1,9 +1,9 @@
-import { ICreateAccountRepository } from '../../../../data/protocols/db/ICreateAccountRepository';
-import { IFindAccountByEmailRepository } from '../../../../data/protocols/db/IFindAccountByEmailRepository';
+import { ICreateAccountRepository } from '../../../../data/protocols/db/account/ICreateAccountRepository';
+import { IFindAccountByEmailRepository } from '../../../../data/protocols/db/account/IFindAccountByEmailRepository';
 import {
   IUpdateAccessTokenDataDTO,
   IUpdateAccessTokenRepository,
-} from '../../../../data/protocols/db/IUpdateAccessTokenRepository';
+} from '../../../../data/protocols/db/account/IUpdateAccessTokenRepository';
 
 import { ICreateAccountDTO } from '../../../../domain/usecases/ICreateAccount';
 import { IAccountModel } from '../../../../domain/models/IAccount';

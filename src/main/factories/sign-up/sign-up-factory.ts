@@ -1,14 +1,14 @@
 import { DbCreateAccount } from '../../../data/usecases/create-account/DbCreateAccount';
 
 import { BCryptHashAdapter } from '../../../infra/criptography/BCryptHashAdapter';
-import { MongoAccountRepository } from '../../../infra/db/mongodb/account-repository/MongoAccountRepository';
-import { MongoLogRepository } from '../../../infra/db/mongodb/log-repository/MongoLogRepository';
+import { MongoAccountRepository } from '../../../infra/db/mongodb/account/MongoAccountRepository';
+import { MongoLogRepository } from '../../../infra/db/mongodb/log/MongoLogRepository';
 
 import { SignUpController } from '../../../presentation/controllers/sign-up/SignUpController';
 import { IController } from '../../../presentation/protocols';
 
-import { LogControllerDecorator } from '../../decorators/log';
-import { makeSignUpValidation } from './sign-up-validation';
+import { LogControllerDecorator } from '../../decorators/LogControllerDecorator';
+import { makeSignUpValidation } from './sign-up-validation-factory';
 
 export const makeSignUpController = (): IController => {
   const hasher = new BCryptHashAdapter(12);

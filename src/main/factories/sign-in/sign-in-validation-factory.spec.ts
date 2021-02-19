@@ -1,13 +1,10 @@
-import { IEmailValidator } from '../../../presentation/protocols/IEmailValidator';
-
+import { makeSignInValidation } from './sign-in-validation-factory';
 import {
-  CompareFieldsValidation,
+  EmailValidation,
   RequiredFieldValidation,
   ValidationComposite,
-  EmailValidation,
 } from '../../../presentation/helpers/validators';
-
-import { makeSignUpValidation } from './sign-up-validation';
+import { IEmailValidator } from '../../../presentation/protocols/IEmailValidator';
 
 jest.mock('../../../presentation/helpers/validators/ValidationComposite');
 
@@ -19,20 +16,17 @@ class EmailValidatorStub implements IEmailValidator {
 
 let emailValidatorStub: EmailValidatorStub;
 
-describe('SignUpValidation Factory', () => {
+describe('SignInValidation Factory', () => {
   beforeEach(() => {
     emailValidatorStub = new EmailValidatorStub();
   });
 
   it('should call ValidationComposite with all validations', () => {
-    makeSignUpValidation();
+    makeSignInValidation();
 
     expect(ValidationComposite).toHaveBeenCalledWith([
-      new RequiredFieldValidation('name'),
       new RequiredFieldValidation('email'),
       new RequiredFieldValidation('password'),
-      new RequiredFieldValidation('passwordConfirmation'),
-      new CompareFieldsValidation('passwordConfirmation', 'password'),
       new EmailValidation('email', emailValidatorStub),
     ]);
   });
