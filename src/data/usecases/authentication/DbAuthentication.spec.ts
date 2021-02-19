@@ -11,7 +11,7 @@ import {
 import { DbAuthentication } from './DbAuthentication';
 
 class UpdateAccessTokenRepositoryStub implements IUpdateAccessTokenRepository {
-  async update(_: IUpdateAccessTokenDataDTO): Promise<void> {
+  async updateAccessToken(_: IUpdateAccessTokenDataDTO): Promise<void> {
     // return GENERATED_ACCESS_TOKEN;
   }
 }
@@ -183,7 +183,10 @@ describe('DbAuthentication UseCase', () => {
   });
 
   it('should call UpdateAccessTokenRepository with correct values', async () => {
-    const updateSpy = jest.spyOn(updateAccessTokenRepositoryStub, 'update');
+    const updateSpy = jest.spyOn(
+      updateAccessTokenRepositoryStub,
+      'updateAccessToken'
+    );
 
     const accessToken = await systemUnderTest.auth({
       email: 'any_email@email.com',
@@ -198,7 +201,7 @@ describe('DbAuthentication UseCase', () => {
 
   it('should throw if UpdateAccessTokenRepository throws', async () => {
     jest
-      .spyOn(updateAccessTokenRepositoryStub, 'update')
+      .spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
       .mockImplementationOnce(() => {
         throw new Error();
       });

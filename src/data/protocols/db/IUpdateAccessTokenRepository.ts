@@ -4,5 +4,5 @@ export interface IUpdateAccessTokenDataDTO {
 }
 
 export interface IUpdateAccessTokenRepository {
-  update(data: IUpdateAccessTokenDataDTO): Promise<void>;
+  updateAccessToken(data: IUpdateAccessTokenDataDTO): Promise<void>;
 }
