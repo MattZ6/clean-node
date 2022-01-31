@@ -42,7 +42,7 @@
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-import-resolver-typescript": "2.5.0",
-    "eslint-plugin-import": "2.24.2",
+    "eslint-plugin-import": "2.25.4",
     "eslint-plugin-prettier": "4.0.0",
     "git-commit-msg-linter": "4.0.7",
     "husky": "7.0.4",
